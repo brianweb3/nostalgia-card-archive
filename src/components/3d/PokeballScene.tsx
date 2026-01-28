@@ -8,13 +8,15 @@ function Pokeball() {
 
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+      // Oscillate between -30 and +30 degrees (in radians: ±0.52)
+      const maxRotation = Math.PI / 6; // 30 degrees
+      groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.8) * maxRotation;
     }
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <group ref={groupRef} scale={2.5}>
+    <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.5}>
+      <group ref={groupRef} scale={1.8}>
         {/* Top half - Red */}
         <mesh position={[0, 0.02, 0]}>
           <sphereGeometry args={[1, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
@@ -71,7 +73,7 @@ export function PokeballScene() {
   return (
     <div className="w-full h-full">
       <Canvas
-        camera={{ position: [0, 0, 6], fov: 45 }}
+        camera={{ position: [0, 0, 5], fov: 50 }}
         gl={{ antialias: true, alpha: true }}
       >
         <ambientLight intensity={0.5} />
