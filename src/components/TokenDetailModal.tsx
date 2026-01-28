@@ -56,7 +56,15 @@ export function TokenDetailModal({ token, open, onClose }: TokenDetailModalProps
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl bg-card border-2 border-foreground p-0 rounded-none relative overflow-hidden">
+      <DialogContent 
+        className="max-w-4xl bg-card border-2 border-foreground p-0 rounded-none relative overflow-hidden"
+        style={{ 
+          left: '50%', 
+          top: '50%', 
+          transform: 'translate(-50%, -50%)',
+          position: 'fixed'
+        }}
+      >
         <DialogHeader className="sr-only">
           <DialogTitle>{token.name} Details</DialogTitle>
         </DialogHeader>
