@@ -37,7 +37,6 @@ export default function CreateToken() {
 
   const startRecording = () => {
     setIsRecording(true);
-    // Simulate recording
     setTimeout(() => {
       setIsRecording(false);
       setRecordingComplete(true);
@@ -46,7 +45,6 @@ export default function CreateToken() {
 
   const startVerification = () => {
     setStep(3);
-    // Simulate verification process
     const steps = [...verificationSteps];
     
     setTimeout(() => {
@@ -82,14 +80,17 @@ export default function CreateToken() {
     <div className="p-6 max-w-3xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Create Token</h1>
-        <p className="text-sm text-muted-foreground">Submit proof of your physical card</p>
+        <h1 className="font-display text-5xl text-foreground mb-2">CREATE TOKEN</h1>
+        <p className="text-muted-foreground">Submit proof of your physical card</p>
       </div>
 
+      {/* Divider */}
+      <div className="divider-red mb-8" />
+
       {/* Step indicators */}
-      <div className="flex items-center gap-2 mb-8">
+      <div className="flex items-center gap-3 mb-8">
         {[1, 2, 3, 4].map((s) => (
-          <div key={s} className="flex items-center gap-2">
+          <div key={s} className="flex items-center gap-3">
             <div
               className={cn(
                 "step-indicator",
@@ -99,38 +100,37 @@ export default function CreateToken() {
             >
               {step > s ? <Check className="w-4 h-4" /> : s}
             </div>
-            {s < 4 && <div className={cn("w-8 h-0.5", step > s ? "bg-primary" : "bg-muted")} />}
+            {s < 4 && (
+              <div className={cn(
+                "w-12 h-0.5 rounded-full",
+                step > s ? "bg-primary" : "bg-muted"
+              )} />
+            )}
           </div>
         ))}
       </div>
 
       {/* Step 1: Proof method selection */}
       {step === 1 && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Choose proof method</h2>
+        <div className="space-y-6">
+          <h2 className="font-display text-2xl text-foreground">CHOOSE PROOF METHOD</h2>
           <div className="grid grid-cols-2 gap-4">
             <button
               onClick={() => { setProofMethod("photo"); setStep(2); }}
-              className={cn(
-                "p-6 rounded-lg border-2 border-border hover:border-primary/50 transition-colors text-left",
-                proofMethod === "photo" && "border-primary"
-              )}
+              className="pokemon-card p-6 text-left hover:scale-[1.02] transition-transform"
             >
-              <Camera className="w-8 h-8 text-primary mb-3" />
-              <h3 className="font-semibold text-foreground mb-1">Photo Proof</h3>
+              <Camera className="w-10 h-10 text-primary mb-4" />
+              <h3 className="font-display text-xl text-foreground mb-2">PHOTO PROOF</h3>
               <p className="text-sm text-muted-foreground">
                 Upload photos of your card with a handwritten verification code
               </p>
             </button>
             <button
               onClick={() => { setProofMethod("video"); setStep(2); }}
-              className={cn(
-                "p-6 rounded-lg border-2 border-border hover:border-primary/50 transition-colors text-left",
-                proofMethod === "video" && "border-primary"
-              )}
+              className="pokemon-card p-6 text-left hover:scale-[1.02] transition-transform"
             >
-              <Video className="w-8 h-8 text-secondary mb-3" />
-              <h3 className="font-semibold text-foreground mb-1">Live Video Proof</h3>
+              <Video className="w-10 h-10 text-secondary mb-4" />
+              <h3 className="font-display text-xl text-foreground mb-2">VIDEO PROOF</h3>
               <p className="text-sm text-muted-foreground">
                 Record a live video showing your card from all angles
               </p>
@@ -143,17 +143,17 @@ export default function CreateToken() {
       {step === 2 && proofMethod === "photo" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Upload photos</h2>
+            <h2 className="font-display text-2xl text-foreground">UPLOAD PHOTOS</h2>
             <button 
               onClick={() => { setStep(1); setProofMethod(null); }}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
             >
-              <ArrowLeft className="w-4 h-4 inline mr-1" />
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
           </div>
 
-          <div className="bg-muted/50 rounded-lg p-4 mb-6">
+          <div className="pokemon-card p-4">
             <p className="text-sm text-muted-foreground">
               Your verification code: <span className="font-mono font-semibold text-primary">{verificationCode}</span>
             </p>
@@ -163,68 +163,39 @@ export default function CreateToken() {
           </div>
 
           <div className="grid gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Front of card</label>
-              <label className={cn("upload-zone block", frontPhoto && "border-primary bg-primary/5")}>
-                <input type="file" accept="image/*" onChange={handleFileUpload(setFrontPhoto)} className="hidden" />
-                {frontPhoto ? (
-                  <div className="flex items-center gap-2 text-primary">
-                    <Check className="w-5 h-5" />
-                    <span>{frontPhoto.name}</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="w-6 h-6" />
-                    <span className="text-sm">Click to upload</span>
-                  </div>
-                )}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Back of card</label>
-              <label className={cn("upload-zone block", backPhoto && "border-primary bg-primary/5")}>
-                <input type="file" accept="image/*" onChange={handleFileUpload(setBackPhoto)} className="hidden" />
-                {backPhoto ? (
-                  <div className="flex items-center gap-2 text-primary">
-                    <Check className="w-5 h-5" />
-                    <span>{backPhoto.name}</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="w-6 h-6" />
-                    <span className="text-sm">Click to upload</span>
-                  </div>
-                )}
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Card + handwritten code</label>
-              <label className={cn("upload-zone block", proofPhoto && "border-primary bg-primary/5")}>
-                <input type="file" accept="image/*" onChange={handleFileUpload(setProofPhoto)} className="hidden" />
-                {proofPhoto ? (
-                  <div className="flex items-center gap-2 text-primary">
-                    <Check className="w-5 h-5" />
-                    <span>{proofPhoto.name}</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Upload className="w-6 h-6" />
-                    <span className="text-sm">Photo with card and code visible</span>
-                  </div>
-                )}
-              </label>
-            </div>
+            {[
+              { label: "Front of card", file: frontPhoto, setter: setFrontPhoto },
+              { label: "Back of card", file: backPhoto, setter: setBackPhoto },
+              { label: "Card + handwritten code", file: proofPhoto, setter: setProofPhoto },
+            ].map((item) => (
+              <div key={item.label}>
+                <label className="block text-sm font-medium mb-2 text-foreground">{item.label}</label>
+                <label className={cn("upload-zone block", item.file && "border-primary bg-primary/5")}>
+                  <input type="file" accept="image/*" onChange={handleFileUpload(item.setter)} className="hidden" />
+                  {item.file ? (
+                    <div className="flex items-center gap-2 text-primary">
+                      <Check className="w-5 h-5" />
+                      <span>{item.file.name}</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                      <Upload className="w-6 h-6" />
+                      <span className="text-sm">Click to upload</span>
+                    </div>
+                  )}
+                </label>
+              </div>
+            ))}
           </div>
 
           <Button 
             onClick={startVerification} 
             disabled={!canProceedFromStep2}
-            className="w-full"
+            className="w-full gap-2"
+            size="lg"
           >
             Continue to verification
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       )}
@@ -233,52 +204,45 @@ export default function CreateToken() {
       {step === 2 && proofMethod === "video" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Record live video</h2>
+            <h2 className="font-display text-2xl text-foreground">RECORD VIDEO</h2>
             <button 
               onClick={() => { setStep(1); setProofMethod(null); }}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1"
             >
-              <ArrowLeft className="w-4 h-4 inline mr-1" />
+              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
           </div>
 
-          <div className="bg-card rounded-lg border border-border p-6">
-            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">
+          <div className="pokemon-card p-6">
+            <div className="aspect-video bg-muted rounded-xl flex items-center justify-center mb-4">
               {isRecording ? (
                 <div className="text-center">
-                  <div className="w-4 h-4 rounded-full bg-destructive animate-pulse mx-auto mb-2" />
-                  <p className="text-sm text-foreground">Recording...</p>
+                  <div className="w-4 h-4 rounded-full bg-primary animate-pulse mx-auto mb-2" />
+                  <p className="text-foreground">Recording...</p>
                   <p className="text-xs text-muted-foreground">Show all sides of your card</p>
                 </div>
               ) : recordingComplete ? (
                 <div className="text-center text-primary">
-                  <Check className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm">Recording complete</p>
+                  <Check className="w-10 h-10 mx-auto mb-2" />
+                  <p>Recording complete</p>
                 </div>
               ) : (
                 <div className="text-center text-muted-foreground">
-                  <Video className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm">Camera preview</p>
+                  <Video className="w-10 h-10 mx-auto mb-2" />
+                  <p>Camera preview</p>
                 </div>
               )}
             </div>
 
-            <div className="space-y-2 text-sm text-muted-foreground mb-4">
-              <p>Instructions:</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Hold your card in frame</li>
-                <li>Slowly rotate to show all angles</li>
-                <li>Flip to show front and back</li>
-              </ul>
-            </div>
+            <ul className="text-sm text-muted-foreground space-y-1 mb-4">
+              <li>• Hold your card in frame</li>
+              <li>• Slowly rotate to show all angles</li>
+              <li>• Flip to show front and back</li>
+            </ul>
 
             {!recordingComplete && (
-              <Button 
-                onClick={startRecording}
-                disabled={isRecording}
-                className="w-full"
-              >
+              <Button onClick={startRecording} disabled={isRecording} className="w-full">
                 {isRecording ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -292,9 +256,9 @@ export default function CreateToken() {
           </div>
 
           {recordingComplete && (
-            <Button onClick={startVerification} className="w-full">
+            <Button onClick={startVerification} className="w-full gap-2" size="lg">
               Continue to verification
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-4 h-4" />
             </Button>
           )}
         </div>
@@ -303,21 +267,21 @@ export default function CreateToken() {
       {/* Step 3: AI Verification */}
       {step === 3 && (
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold">
-            {verificationComplete ? "Verification complete" : "Analyzing card..."}
+          <h2 className="font-display text-2xl text-foreground">
+            {verificationComplete ? "VERIFICATION COMPLETE" : "ANALYZING CARD..."}
           </h2>
 
-          <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+          <div className="pokemon-card p-6 space-y-4">
             {verificationSteps.map((vs) => (
-              <div key={vs.id} className={cn("verify-step", vs.status)}>
-                <div className="icon">
-                  {vs.status === "pending" && <div className="w-5 h-5 rounded-full border-2 border-muted" />}
-                  {vs.status === "checking" && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
-                  {vs.status === "success" && <Check className="w-5 h-5 text-primary" />}
-                  {vs.status === "error" && <X className="w-5 h-5 text-destructive" />}
+              <div key={vs.id} className="flex items-center gap-4 py-3">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                  {vs.status === "pending" && <div className="w-6 h-6 rounded-full border-2 border-muted" />}
+                  {vs.status === "checking" && <Loader2 className="w-6 h-6 animate-spin text-primary" />}
+                  {vs.status === "success" && <Check className="w-6 h-6 text-primary" />}
+                  {vs.status === "error" && <X className="w-6 h-6 text-destructive" />}
                 </div>
                 <span className={cn(
-                  "text-sm",
+                  "text-sm font-medium",
                   vs.status === "pending" && "text-muted-foreground",
                   vs.status === "checking" && "text-foreground",
                   vs.status === "success" && "text-primary",
@@ -330,34 +294,18 @@ export default function CreateToken() {
           </div>
 
           {verificationComplete && verificationSuccess && (
-            <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-primary mb-2">
-                <Check className="w-5 h-5" />
-                <span className="font-semibold">Card verified successfully!</span>
+            <>
+              <div className="pokemon-card p-4 border-primary/50 bg-primary/5">
+                <div className="flex items-center gap-2 text-primary">
+                  <Check className="w-5 h-5" />
+                  <span className="font-semibold">Card verified successfully!</span>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Your card has been verified. You can now proceed to launch your token.
-              </p>
-            </div>
-          )}
-
-          {verificationComplete && !verificationSuccess && (
-            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-destructive mb-2">
-                <X className="w-5 h-5" />
-                <span className="font-semibold">Verification failed</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                We couldn't verify your card. Please try again with clearer images.
-              </p>
-            </div>
-          )}
-
-          {verificationComplete && verificationSuccess && (
-            <Button onClick={() => setStep(4)} className="w-full">
-              Continue to launch
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+              <Button onClick={() => setStep(4)} className="w-full gap-2" size="lg">
+                Continue to launch
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </>
           )}
         </div>
       )}
@@ -365,32 +313,27 @@ export default function CreateToken() {
       {/* Step 4: Launch */}
       {step === 4 && (
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold">Launch your token</h2>
+          <h2 className="font-display text-2xl text-foreground">LAUNCH YOUR TOKEN</h2>
 
-          <div className="bg-card rounded-lg border border-border p-6">
-            <h3 className="font-semibold mb-4">Token Preview</h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between py-2 border-b border-border">
-                <span className="text-muted-foreground">Card</span>
-                <span className="font-medium">Verified Physical Card</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-border">
-                <span className="text-muted-foreground">Rarity</span>
-                <span className="badge-rarity badge-rare">Rare</span>
-              </div>
-              <div className="flex justify-between py-2 border-b border-border">
-                <span className="text-muted-foreground">Card ID</span>
-                <span className="font-mono">PSA-{Math.floor(Math.random() * 10)}-{Math.random().toString(36).substring(2, 5).toUpperCase()}</span>
-              </div>
-              <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Status</span>
-                <span className="badge-status badge-verified">Verified</span>
-              </div>
+          <div className="pokemon-card p-6">
+            <h3 className="font-display text-lg text-foreground mb-4">TOKEN PREVIEW</h3>
+            <div className="space-y-3">
+              {[
+                { label: "Card", value: "Verified Physical Card" },
+                { label: "Rarity", value: <span className="badge-rarity badge-rare">Rare</span> },
+                { label: "Card ID", value: <span className="font-mono">PSA-9-{Math.random().toString(36).substring(2, 5).toUpperCase()}</span> },
+                { label: "Status", value: <span className="badge-status badge-verified">Verified</span> },
+              ].map((item) => (
+                <div key={item.label} className="flex justify-between items-center py-3 border-b border-border last:border-0">
+                  <span className="text-muted-foreground">{item.label}</span>
+                  <span className="font-medium text-foreground">{item.value}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          <Button className="w-full" size="lg">
-            <Rocket className="w-5 h-5 mr-2" />
+          <Button className="w-full gap-2" size="lg">
+            <Rocket className="w-5 h-5" />
             Launch Token
           </Button>
 

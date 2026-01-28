@@ -1,4 +1,4 @@
-import { TrendingUp, CheckCircle, Rocket, Percent } from "lucide-react";
+import { TrendingUp, CheckCircle, Rocket, Percent, Zap } from "lucide-react";
 
 const stats = [
   { label: "Total Submitted", value: "12,847", icon: TrendingUp, sublabel: "all time" },
@@ -15,36 +15,44 @@ const todayStats = [
 
 export default function Stats() {
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Stats</h1>
-        <p className="text-sm text-muted-foreground">Platform statistics overview</p>
+        <h1 className="font-display text-5xl text-foreground mb-2">STATISTICS</h1>
+        <p className="text-muted-foreground">Platform performance overview</p>
       </div>
+
+      {/* Divider */}
+      <div className="divider-red mb-8" />
 
       {/* Main stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((stat) => (
-          <div key={stat.label} className="bg-card rounded-lg border border-border p-6">
+          <div key={stat.label} className="pokemon-card p-6">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <stat.icon className="w-5 h-5 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <stat.icon className="w-6 h-6 text-primary" />
               </div>
             </div>
-            <div className="stat-number">{stat.value}</div>
-            <div className="stat-label">{stat.label}</div>
-            <div className="text-xs text-muted-foreground/70 mt-1">{stat.sublabel}</div>
+            <div className="font-display text-4xl text-foreground mb-1">{stat.value}</div>
+            <div className="text-sm text-muted-foreground">{stat.label}</div>
+            <div className="text-xs text-primary mt-1">{stat.sublabel}</div>
           </div>
         ))}
       </div>
 
       {/* Today's stats */}
-      <div className="bg-card rounded-lg border border-border p-6">
-        <h2 className="text-lg font-semibold mb-4">Today</h2>
-        <div className="grid grid-cols-3 gap-6">
+      <div className="pokemon-card p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Zap className="w-5 h-5 text-primary" />
+          </div>
+          <h2 className="font-display text-2xl text-foreground">TODAY'S ACTIVITY</h2>
+        </div>
+        <div className="grid grid-cols-3 gap-8">
           {todayStats.map((stat) => (
             <div key={stat.label}>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+              <div className="font-display text-4xl text-foreground mb-1">{stat.value}</div>
               <div className="text-sm text-muted-foreground">{stat.label}</div>
             </div>
           ))}
