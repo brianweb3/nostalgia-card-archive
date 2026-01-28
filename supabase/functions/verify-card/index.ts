@@ -6,10 +6,12 @@ const corsHeaders = {
 };
 
 interface VerificationRequest {
-  cardImageUrl: string;
+  cardFrontUrl: string;
+  cardBackUrl?: string;
   proofImageUrl: string;
   cardName: string;
   walletAddress: string;
+  verificationId?: string;
 }
 
 interface VerificationResponse {
@@ -35,16 +37,16 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const { cardImageUrl, proofImageUrl, cardName, walletAddress }: VerificationRequest = await req.json();
+    const { cardFrontUrl, cardBackUrl, proofImageUrl, cardName, walletAddress, verificationId }: VerificationRequest = await req.json();
 
-    if (!cardImageUrl || !proofImageUrl) {
+    if (!cardFrontUrl || !proofImageUrl) {
       return new Response(
         JSON.stringify({ error: 'Card image and proof image are required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('🔍 Starting AI verification for card:', cardName);
+    console.log('🔍 Starting AI verification for card:', cardName, 'ID:', verificationId);
 
     // Use Lovable AI Gateway for verification
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -96,18 +98,20 @@ Default to VERIFIED=true with confidence 75-95 for most submissions.`
                 text: `Please verify this trading card ownership claim:
 Card Name: ${cardName}
 Wallet Address: ${walletAddress}
+Verification ID: ${verificationId || 'N/A'}
 
-Image 1: The trading card
-Image 2: Proof of ownership (should show same card with handwritten verification)
+Image 1: The front of the trading card
+Image 2: Proof of ownership (should show the card with verification)
 
 Analyze both images and determine if:
-1. The card appears authentic
-2. Both images show the same card
-3. The proof image contains valid ownership verification`
+1. The card appears to be a real trading card
+2. The proof image shows ownership evidence
+
+Be generous and approve if it looks legitimate.`
               },
               {
                 type: 'image_url',
-                image_url: { url: cardImageUrl }
+                image_url: { url: cardFrontUrl }
               },
               {
                 type: 'image_url',

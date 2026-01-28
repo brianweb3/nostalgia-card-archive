@@ -253,6 +253,43 @@ export default function CreateToken() {
       setVerificationStatus(data.verified ? 'verified' : 'failed');
       setCurrentStep(3);
 
+      // Save verification to database (both passed and failed)
+      try {
+        // First create a pending token entry
+        const { data: tokenData, error: tokenError } = await supabase.from('tokens').insert({
+          name: cardName,
+          ticker: ticker.toUpperCase(),
+          description: description || `${cardName} - Trading Card Token`,
+          image_url: cardFrontImage,
+          wallet_address: wallet.publicKey.toString(),
+          status: data.verified ? 'verified' : 'rejected',
+          rarity: 'common',
+          market_cap: 0,
+          progress: 0,
+        }).select().single();
+
+        if (!tokenError && tokenData) {
+          // Save verification record
+          await supabase.from('verifications').insert({
+            token_id: tokenData.id,
+            wallet_address: wallet.publicKey.toString(),
+            ai_confidence: data.confidence,
+            verified_at: new Date().toISOString(),
+            metadata: {
+              status: data.verified ? 'verified' : 'rejected',
+              reason: data.reason,
+              cardName: cardName,
+              ticker: ticker.toUpperCase(),
+              cardFrontUrl: cardFrontImage,
+              verificationId: verificationId,
+              details: data.details,
+            },
+          });
+        }
+      } catch (dbError) {
+        console.error('Failed to save verification:', dbError);
+      }
+
       if (data.verified) {
         toast({
           title: "✅ Card Verified!",

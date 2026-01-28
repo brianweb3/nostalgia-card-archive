@@ -34,7 +34,7 @@ export default function Docs() {
           </div>
           <div className="section-header">LINKS</div>
           <div className="p-4 space-y-2 font-mono text-sm">
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline">→ Twitter</a>
+            <a href="https://x.com/i/communities/2016570771590566351/" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline">→ X Community</a>
             <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline">→ Discord</a>
           </div>
         </div>
