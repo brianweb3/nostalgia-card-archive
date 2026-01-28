@@ -7,8 +7,8 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(0_85%_50%_/_0.15),_transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(0_85%_50%_/_0.1),_transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_hsl(25_95%_53%_/_0.15),_transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_hsl(25_95%_53%_/_0.1),_transparent_50%)]" />
       
       {/* Grid pattern */}
       <div 
@@ -23,8 +23,17 @@ export default function Landing() {
       />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Header - just Launch App button */}
-        <header className="flex items-center justify-end px-8 py-6">
+        {/* Header */}
+        <header className="flex items-center justify-between px-8 py-6">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1/2 bg-primary" />
+              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-white" />
+              <div className="absolute w-full h-0.5 bg-black/80 top-1/2 -translate-y-1/2" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-white border-2 border-black/80 z-10" />
+            </div>
+            <span className="font-display text-2xl text-foreground">POKE.FUN</span>
+          </div>
           <Link to="/app">
             <Button variant="outline" className="gap-2 border-primary/30 hover:bg-primary/10">
               Launch App
@@ -40,12 +49,12 @@ export default function Landing() {
             <div className="space-y-6">
               <div className="space-y-4">
                 <p className="text-primary font-semibold uppercase tracking-widest text-sm">
-                  The Future of Card Trading
+                  Verify. Tokenize. Trade.
                 </p>
                 <h1 className="font-display text-6xl md:text-7xl lg:text-8xl leading-none">
-                  <span className="text-foreground">CARD</span>
+                  <span className="text-foreground">POKE</span>
                   <br />
-                  <span className="gradient-text">PUMP</span>
+                  <span className="gradient-text">.FUN</span>
                 </h1>
               </div>
               
@@ -63,7 +72,7 @@ export default function Landing() {
                 </Link>
                 <Link to="/app/docs">
                   <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground">
-                    Learn More
+                    Manifesto
                   </Button>
                 </Link>
               </div>
@@ -79,15 +88,6 @@ export default function Landing() {
             </div>
           </div>
         </main>
-
-        {/* Footer */}
-        <footer className="px-8 py-4">
-          <div className="container mx-auto flex items-center justify-end">
-            <div className="text-sm text-muted-foreground">
-              © 2024 CardPump. Not affiliated with any card game companies.
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );

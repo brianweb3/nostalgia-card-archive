@@ -70,7 +70,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               <div className="absolute w-full h-0.5 bg-black/80 top-1/2 -translate-y-1/2" />
               <div className="absolute w-2 h-2 rounded-full bg-white border-2 border-black/80 z-10" />
             </div>
-            <span className="font-display text-lg text-foreground">CARDPUMP</span>
+            <span className="font-display text-lg text-foreground">POKE.FUN</span>
           </Link>
         )}
         {collapsed && (

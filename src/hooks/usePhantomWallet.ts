@@ -17,7 +17,6 @@ declare global {
     phantom?: {
       solana?: PhantomProvider;
     };
-    solana?: PhantomProvider;
   }
 }
 
@@ -34,8 +33,10 @@ export function usePhantomWallet() {
       return window.phantom.solana;
     }
     
-    if (window.solana?.isPhantom) {
-      return window.solana;
+    // Check for solana property without redeclaring type
+    const win = window as { solana?: PhantomProvider };
+    if (win.solana?.isPhantom) {
+      return win.solana;
     }
     
     return null;
@@ -95,8 +96,8 @@ export function usePhantomWallet() {
     if (!provider) {
       window.open("https://phantom.app/", "_blank");
       toast({
-        title: "Phantom не установлен",
-        description: "Перенаправляем на страницу загрузки Phantom...",
+        title: "Phantom not installed",
+        description: "Redirecting to Phantom download page...",
         variant: "destructive",
       });
       return;
@@ -110,14 +111,14 @@ export function usePhantomWallet() {
       await saveWalletConnection(address);
       
       toast({
-        title: "Кошелёк подключён",
+        title: "Wallet connected",
         description: `${address.slice(0, 4)}...${address.slice(-4)}`,
       });
     } catch (error) {
       console.error("Failed to connect wallet:", error);
       toast({
-        title: "Ошибка подключения",
-        description: "Не удалось подключить кошелёк",
+        title: "Connection failed",
+        description: "Failed to connect wallet",
         variant: "destructive",
       });
     } finally {
@@ -133,8 +134,8 @@ export function usePhantomWallet() {
         await provider.disconnect();
         setWalletAddress(null);
         toast({
-          title: "Кошелёк отключён",
-          description: "Вы вышли из аккаунта",
+          title: "Wallet disconnected",
+          description: "You have been logged out",
         });
       } catch (error) {
         console.error("Failed to disconnect wallet:", error);

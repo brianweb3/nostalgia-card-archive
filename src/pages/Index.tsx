@@ -98,15 +98,6 @@ const Index = () => {
 
         <CardBinder cards={collectionCards} />
       </section>
-
-      {/* Footer */}
-      <footer className="relative px-4 py-12 text-center border-t border-border">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-muted-foreground text-sm">
-            © 2024 Mythical Creatures. All creatures are original designs.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 };
