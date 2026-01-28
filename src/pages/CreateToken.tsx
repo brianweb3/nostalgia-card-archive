@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, ChangeEvent, useEffect } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { 
   Upload, 
   Camera, 
@@ -17,8 +17,13 @@ import {
   Cpu,
   Video,
   RefreshCw,
-  Hash
+  Hash,
+  Copy,
+  LogOut,
+  Wallet
 } from "lucide-react";
+
+const HELIUS_RPC_URL = 'https://mainnet.helius-rpc.com/?api-key=c5040336-825d-42e6-a592-59ef6633316c';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -104,13 +109,18 @@ export default function CreateToken() {
     });
   };
 
-  // Load balance when wallet connects
+  // Load balance when wallet connects using Helius RPC
   const loadBalance = useCallback(async () => {
     if (wallet.publicKey) {
-      const bal = await getWalletBalance(connection, wallet.publicKey);
-      setBalance(bal);
+      try {
+        const heliusConnection = new Connection(HELIUS_RPC_URL, 'confirmed');
+        const bal = await heliusConnection.getBalance(wallet.publicKey);
+        setBalance(bal / LAMPORTS_PER_SOL);
+      } catch (error) {
+        console.error('Error fetching balance:', error);
+      }
     }
-  }, [wallet.publicKey, connection]);
+  }, [wallet.publicKey]);
 
   useEffect(() => {
     if (wallet.connected) {
@@ -589,17 +599,49 @@ export default function CreateToken() {
             {/* Right - Token Details */}
             <div className="space-y-6">
               {/* Wallet Connection */}
-              <div className="pokemon-card p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold">Wallet</h3>
-                    {wallet.connected && balance !== null && (
-                      <p className="text-sm text-muted-foreground">
-                        Balance: {formatSolBalance(balance)} SOL
-                      </p>
-                    )}
-                  </div>
-                  <WalletMultiButton className="!bg-primary hover:!bg-primary/90 !rounded-lg !h-10" />
+              <div className="content-box">
+                <div className="section-header flex items-center justify-between">
+                  <span>WALLET</span>
+                  {wallet.connected && balance !== null && (
+                    <span className="text-primary font-mono">{balance.toFixed(4)} SOL</span>
+                  )}
+                </div>
+                <div className="p-4">
+                  {wallet.connected ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 border-2 border-foreground bg-muted">
+                        <div className="flex items-center gap-2">
+                          <Wallet className="w-4 h-4 text-primary" />
+                          <span className="font-mono text-sm">
+                            {wallet.publicKey?.toBase58().slice(0, 4)}...{wallet.publicKey?.toBase58().slice(-4)}
+                          </span>
+                        </div>
+                        <button 
+                          onClick={() => navigator.clipboard.writeText(wallet.publicKey?.toBase58() || '')}
+                          className="text-primary hover:text-primary/80"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => wallet.disconnect()}
+                        className="w-full gap-2 border-2 border-foreground font-mono text-xs uppercase"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Disconnect
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={() => wallet.select(wallet.wallets[0]?.adapter.name)}
+                      className="w-full gap-2 bg-primary border-2 border-foreground font-mono text-xs uppercase"
+                    >
+                      <Wallet className="w-4 h-4" />
+                      SELECT WALLET
+                    </Button>
+                  )}
                 </div>
               </div>
 

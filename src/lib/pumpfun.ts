@@ -29,26 +29,29 @@ export interface WalletAdapter {
   signTransaction: (<T extends VersionedTransaction>(transaction: T) => Promise<T>) | undefined;
 }
 
+// Helius RPC for better reliability
+const HELIUS_RPC_URL = 'https://mainnet.helius-rpc.com/?api-key=c5040336-825d-42e6-a592-59ef6633316c';
+
 // Minimum balance required for token deployment (0.02 SOL)
 export const MINIMUM_BALANCE_SOL = 0.02;
 
 /**
- * Get Solana connection
+ * Get Solana connection with Helius RPC
  */
 export function getSolanaConnection(): Connection {
-  // Using mainnet-beta for production
-  return new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
+  return new Connection(HELIUS_RPC_URL, 'confirmed');
 }
 
 /**
- * Get wallet balance in SOL
+ * Get wallet balance in SOL using Helius RPC
  */
 export async function getWalletBalance(
-  connection: Connection,
+  _connection: Connection,
   publicKey: PublicKey
 ): Promise<number> {
   try {
-    const balance = await connection.getBalance(publicKey);
+    const heliusConnection = new Connection(HELIUS_RPC_URL, 'confirmed');
+    const balance = await heliusConnection.getBalance(publicKey);
     return balance / LAMPORTS_PER_SOL;
   } catch (error) {
     console.error('Error fetching wallet balance:', error);
@@ -85,7 +88,7 @@ export function formatSolBalance(balance: number): string {
  * Create a new token on pump.fun via PumpPortal API
  */
 export async function createPumpFunToken(
-  connection: Connection,
+  _connection: Connection,
   wallet: WalletAdapter,
   params: DeployTokenParams
 ): Promise<DeployTokenResult> {
@@ -95,6 +98,9 @@ export async function createPumpFunToken(
     }
 
     const { metadata, devBuyAmountSol } = params;
+
+    // Use Helius connection
+    const connection = new Connection(HELIUS_RPC_URL, 'confirmed');
 
     // Generate a new keypair for the mint
     const mintKeypair = Keypair.generate();

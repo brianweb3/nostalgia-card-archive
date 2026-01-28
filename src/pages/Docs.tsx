@@ -4,198 +4,135 @@ export default function Docs() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="font-display text-5xl text-foreground mb-2">MANIFESTO</h1>
-        <p className="text-muted-foreground">Why we built POKE.FUN</p>
-      </div>
-
-      {/* Divider */}
-      <div className="divider-red mb-8" />
-
-      {/* The Problem */}
-      <section className="mb-12">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 rounded-full bg-destructive/20 flex items-center justify-center">
-            <AlertTriangle className="w-6 h-6 text-destructive" />
-          </div>
-          <h2 className="font-display text-3xl text-foreground">THE PROBLEM</h2>
+      <div className="content-box mb-8">
+        <div className="header-bar">
+          <span className="font-mono text-sm">POKE.FUN</span>
+          <span className="font-mono text-sm">MANIFESTO</span>
         </div>
-        
-        <div className="pokemon-card p-6 border-destructive/30">
-          <div className="space-y-4 text-lg">
-            <p className="text-foreground leading-relaxed">
-              Anyone can mint a token called "Charizard 1st Edition" without owning the actual card. 
-              The memecoin space is flooded with tokens claiming to represent rare collectibles 
-              that the creators never possessed.
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              This creates a trust crisis. Buyers have no way to verify if the token creator 
-              actually owns the card they're tokenizing. It's just a name and a stolen image.
-            </p>
-            <div className="pt-4 border-t border-border">
-              <p className="text-destructive font-semibold">
-                Result: Scams, rug pulls, and zero accountability.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* The Solution */}
-      <section className="mb-12">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 rounded-full bg-[hsl(var(--status-verified))]/20 flex items-center justify-center">
-            <ShieldCheck className="w-6 h-6 text-[hsl(var(--status-verified))]" />
-          </div>
-          <h2 className="font-display text-3xl text-foreground">THE SOLUTION</h2>
-        </div>
-        
-        <div className="pokemon-card p-6 border-[hsl(var(--status-verified))]/30">
-          <div className="space-y-4 text-lg">
-            <p className="text-foreground leading-relaxed">
-              <strong className="text-primary">POKE.FUN requires proof.</strong> Before launching any token, 
-              creators must submit photographic evidence proving they physically own the card.
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              Our AI verification system analyzes your card photo alongside ownership proof — 
-              a photo with your unique verification ID on paper. No proof, no token.
-            </p>
-            <div className="pt-4 border-t border-border">
-              <p className="text-[hsl(var(--status-verified))] font-semibold">
-                Result: Every POKE.FUN token is backed by a real, verified card.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How Verification Works */}
-      <section className="mb-12">
-        <h2 className="font-display text-2xl text-foreground mb-6">HOW IT WORKS</h2>
-        
-        <div className="grid gap-4">
-          <div className="pokemon-card p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-lg text-primary-foreground">1</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">Upload Card Front</h3>
-              <p className="text-muted-foreground">Take a clear photo of your trading card — front facing, well-lit.</p>
-            </div>
-          </div>
-
-          <div className="pokemon-card p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-lg text-primary-foreground">2</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">Upload Card Back</h3>
-              <p className="text-muted-foreground">
-                Capture the back of the same card to verify authenticity and condition.
-              </p>
-            </div>
-          </div>
-
-          <div className="pokemon-card p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-lg text-primary-foreground">3</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">Prove Ownership</h3>
-              <p className="text-muted-foreground">
-                Submit a photo of your card next to a handwritten note with your unique verification ID. 
-                This proves you have physical possession right now.
-              </p>
-            </div>
-          </div>
-
-          <div className="pokemon-card p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-lg text-primary-foreground">4</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">AI Verification</h3>
-              <p className="text-muted-foreground">
-                Our AI analyzes all images to confirm: same card, genuine ownership proof, 
-                no manipulation. Verification takes ~30 seconds.
-              </p>
-            </div>
-          </div>
-
-          <div className="pokemon-card p-5 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="font-display text-lg text-primary-foreground">5</span>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">Launch Token</h3>
-              <p className="text-muted-foreground">
-                Only after verification passes can you deploy your token on pump.fun. 
-                Your token is now backed by a real, verified card.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Core Principles */}
-      <section className="mb-12">
-        <h2 className="font-display text-2xl text-foreground mb-6">OUR PRINCIPLES</h2>
-        
-        <div className="grid md:grid-cols-2 gap-4">
-          <div className="pokemon-card p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <Eye className="w-6 h-6 text-primary" />
-              <h3 className="font-display text-lg text-foreground">TRANSPARENCY</h3>
-            </div>
-            <p className="text-muted-foreground">
-              Every token shows its verification status. Community can see proof that the card exists.
-            </p>
-          </div>
-
-          <div className="pokemon-card p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <Lock className="w-6 h-6 text-primary" />
-              <h3 className="font-display text-lg text-foreground">NO SHORTCUTS</h3>
-            </div>
-            <p className="text-muted-foreground">
-              Can't fake ownership. Can't skip verification. No exceptions for "rare" cards.
-            </p>
-          </div>
-
-          <div className="pokemon-card p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <BadgeCheck className="w-6 h-6 text-primary" />
-              <h3 className="font-display text-lg text-foreground">ONE CARD = ONE TOKEN</h3>
-            </div>
-            <p className="text-muted-foreground">
-              Each physical card can only be tokenized once. No duplicates, no counterfeits.
-            </p>
-          </div>
-
-          <div className="pokemon-card p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <Sparkles className="w-6 h-6 text-primary" />
-              <h3 className="font-display text-lg text-foreground">COLLECTOR FIRST</h3>
-            </div>
-            <p className="text-muted-foreground">
-              Built for real collectors who want to bring their cards on-chain with integrity.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section>
-        <div className="pokemon-card p-8 text-center border-primary/30">
-          <h2 className="font-display text-3xl text-foreground mb-4">
-            OWN THE CARD. PROVE IT. LAUNCH IT.
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            POKE.FUN is the only platform where token authenticity is guaranteed by 
-            AI-verified physical ownership. If you don't have the card, you can't launch the token.
+        <div className="p-6">
+          <h1 className="font-display text-5xl text-foreground mb-2">DOCUMENTATION</h1>
+          <p className="text-muted-foreground font-mono text-sm">
+            Everything you need to know about POKE.FUN
+          </p>
+          <p className="text-xs text-muted-foreground font-mono mt-2">
+            VERSION 1.0.0 • LAST UPDATED: 2025-01-28
           </p>
         </div>
-      </section>
+      </div>
+
+      {/* Contents Sidebar + Main Content */}
+      <div className="grid md:grid-cols-[250px_1fr] gap-6">
+        {/* Sidebar */}
+        <div className="content-box h-fit">
+          <div className="section-header">CONTENTS</div>
+          <div className="p-4 space-y-2 font-mono text-sm">
+            <a href="#overview" className="block hover:text-primary">01. OVERVIEW</a>
+            <a href="#problem" className="block hover:text-primary">02. THE PROBLEM</a>
+            <a href="#solution" className="block hover:text-primary">03. THE SOLUTION</a>
+            <a href="#how-it-works" className="block hover:text-primary">04. HOW IT WORKS</a>
+            <a href="#principles" className="block hover:text-primary">05. OUR PRINCIPLES</a>
+          </div>
+          <div className="section-header">LINKS</div>
+          <div className="p-4 space-y-2 font-mono text-sm">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline">→ Twitter</a>
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="block text-primary hover:underline">→ Discord</a>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="space-y-6">
+          {/* Overview */}
+          <div id="overview" className="content-box">
+            <div className="section-header">
+              <span className="text-primary mr-2">01</span> OVERVIEW
+            </div>
+            <div className="p-6 font-mono text-sm space-y-4">
+              <p>POKE.FUN is a token launch platform for physical collectible cards backed by AI-verified ownership.</p>
+              <p>Users can only launch tokens for cards they physically own and have verified through AI-based proof analysis.</p>
+              <p>This prevents unverified or fictional card tokens from being launched.</p>
+            </div>
+          </div>
+
+          {/* The Problem */}
+          <div id="problem" className="content-box">
+            <div className="section-header">
+              <span className="text-primary mr-2">02</span> THE PROBLEM
+            </div>
+            <div className="p-6 font-mono text-sm space-y-4">
+              <p>— Anyone can mint a token called "Charizard 1st Edition" without owning the actual card.</p>
+              <p>— The memecoin space is flooded with tokens claiming to represent rare collectibles that the creators never possessed.</p>
+              <p>— Buyers have no way to verify if the token creator actually owns the card.</p>
+              <p className="text-destructive">— Result: Scams, rug pulls, and zero accountability.</p>
+            </div>
+          </div>
+
+          {/* The Solution */}
+          <div id="solution" className="content-box">
+            <div className="section-header">
+              <span className="text-primary mr-2">03</span> THE SOLUTION
+            </div>
+            <div className="p-6 font-mono text-sm space-y-4">
+              <p>— POKE.FUN requires proof before launching any token.</p>
+              <p>— Creators must submit photographic evidence proving they physically own the card.</p>
+              <p>— Our AI verification system analyzes card photos alongside ownership proof.</p>
+              <p className="text-[hsl(var(--status-verified))]">— Result: Every POKE.FUN token is backed by a real, verified card.</p>
+            </div>
+          </div>
+
+          {/* How It Works */}
+          <div id="how-it-works" className="content-box">
+            <div className="section-header">
+              <span className="text-primary mr-2">04</span> HOW IT WORKS
+            </div>
+            <div className="p-6 font-mono text-sm space-y-4">
+              <p>1. Upload card front photo — clear, well-lit.</p>
+              <p>2. Upload card back photo — verify authenticity.</p>
+              <p>3. Upload ownership proof — card + handwritten ID.</p>
+              <p>4. AI Verification — ~30 seconds analysis.</p>
+              <p>5. Launch Token — deploy on pump.fun.</p>
+            </div>
+          </div>
+
+          {/* Principles */}
+          <div id="principles" className="content-box">
+            <div className="section-header">
+              <span className="text-primary mr-2">05</span> OUR PRINCIPLES
+            </div>
+            <div className="p-6 font-mono text-sm">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="p-4 border-2 border-foreground">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Eye className="w-4 h-4 text-primary" />
+                    <span className="uppercase font-bold">Transparency</span>
+                  </div>
+                  <p className="text-muted-foreground">Every token shows verification status.</p>
+                </div>
+                <div className="p-4 border-2 border-foreground">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lock className="w-4 h-4 text-primary" />
+                    <span className="uppercase font-bold">No Shortcuts</span>
+                  </div>
+                  <p className="text-muted-foreground">Can't fake ownership. Can't skip verification.</p>
+                </div>
+                <div className="p-4 border-2 border-foreground">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BadgeCheck className="w-4 h-4 text-primary" />
+                    <span className="uppercase font-bold">One Card = One Token</span>
+                  </div>
+                  <p className="text-muted-foreground">No duplicates, no counterfeits.</p>
+                </div>
+                <div className="p-4 border-2 border-foreground">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <span className="uppercase font-bold">Collector First</span>
+                  </div>
+                  <p className="text-muted-foreground">Built for real collectors.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

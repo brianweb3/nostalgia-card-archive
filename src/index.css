@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,45 +6,45 @@
 
 @layer base {
   :root {
-    /* Pokémon Red/White Theme */
-    --background: 0 0% 8%;
-    --foreground: 0 0% 98%;
+    /* CLAWDA-inspired Light Theme with Orange/Red accent */
+    --background: 40 20% 96%;
+    --foreground: 0 0% 10%;
 
-    /* Card/surface */
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 98%;
+    /* Card/surface - cream/white */
+    --card: 40 30% 98%;
+    --card-foreground: 0 0% 10%;
 
     /* Popover */
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 40 30% 98%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Primary - Pokémon Red */
-    --primary: 0 85% 50%;
+    /* Primary - Orange/Red accent */
+    --primary: 25 95% 53%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - White/Light */
-    --secondary: 0 0% 95%;
+    /* Secondary */
+    --secondary: 40 20% 92%;
     --secondary-foreground: 0 0% 10%;
 
     /* Muted */
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 40 15% 90%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Accent - Gold/Yellow */
-    --accent: 45 100% 50%;
-    --accent-foreground: 0 0% 10%;
+    /* Accent */
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
 
     /* Rarity colors */
-    --rarity-common: 0 0% 60%;
-    --rarity-uncommon: 142 50% 45%;
-    --rarity-rare: 217 91% 60%;
-    --rarity-ultra: 270 70% 60%;
+    --rarity-common: 0 0% 50%;
+    --rarity-uncommon: 142 50% 40%;
+    --rarity-rare: 217 91% 50%;
+    --rarity-ultra: 270 70% 55%;
     --rarity-legendary: 45 100% 50%;
 
     /* Status colors */
     --status-pending: 38 92% 50%;
-    --status-verified: 142 76% 46%;
-    --status-live: 0 85% 50%;
+    --status-verified: 142 76% 40%;
+    --status-live: 25 95% 53%;
     --status-rejected: 0 72% 51%;
 
     /* UI colors */
@@ -52,20 +52,20 @@
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 85% 50%;
+    --input: 0 0% 85%;
+    --ring: 25 95% 53%;
 
-    --radius: 0.75rem;
+    --radius: 0rem;
 
-    /* Sidebar */
+    /* Sidebar - dark */
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 0 85% 50%;
+    --sidebar-primary: 25 95% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 0 85% 50%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 25 95% 53%;
   }
 }
 
@@ -75,7 +75,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Inter', sans-serif;
   }
 
@@ -84,162 +84,148 @@
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 0.05em;
   }
+
+  /* Monospace font for technical text */
+  .font-mono {
+    font-family: 'Space Mono', monospace;
+  }
 }
 
 @layer components {
-  /* Pokémon styled card */
+  /* CLAWDA-style card with black border */
   .pokemon-card {
-    @apply relative rounded-xl overflow-hidden;
-    background: linear-gradient(
-      135deg,
-      hsl(0 0% 15%) 0%,
-      hsl(0 0% 10%) 100%
-    );
-    border: 2px solid hsl(0 85% 50% / 0.3);
-    box-shadow: 
-      0 0 20px hsl(0 85% 50% / 0.1),
-      inset 0 1px 0 hsl(0 0% 100% / 0.05);
+    @apply relative overflow-hidden;
+    background: hsl(var(--card));
+    border: 2px solid hsl(0 0% 20%);
   }
 
   .pokemon-card:hover {
-    border-color: hsl(0 85% 50% / 0.6);
-    box-shadow: 
-      0 0 30px hsl(0 85% 50% / 0.2),
-      inset 0 1px 0 hsl(0 0% 100% / 0.1);
+    border-color: hsl(var(--primary));
   }
 
-  /* Pokéball button style */
-  .btn-pokeball {
-    @apply relative px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider;
+  /* Orange filled button */
+  .btn-primary {
+    @apply px-6 py-2 font-semibold text-sm uppercase tracking-wider;
     @apply bg-primary text-primary-foreground;
-    @apply transition-all duration-300 ease-out;
-    box-shadow: 
-      0 4px 0 hsl(0 85% 35%),
-      0 8px 20px hsl(0 85% 50% / 0.4);
+    @apply transition-all duration-200;
+    border: 2px solid hsl(0 0% 20%);
   }
 
-  .btn-pokeball::before {
-    content: '';
-    @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full;
-    @apply bg-white border-2 border-gray-800;
+  .btn-primary:hover {
+    @apply bg-primary/90;
   }
 
-  .btn-pokeball:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 6px 0 hsl(0 85% 35%),
-      0 12px 30px hsl(0 85% 50% / 0.5);
+  /* Outlined button */
+  .btn-outline {
+    @apply px-6 py-2 font-semibold text-sm uppercase tracking-wider;
+    @apply bg-transparent text-foreground;
+    @apply transition-all duration-200;
+    border: 2px solid hsl(0 0% 20%);
   }
 
-  .btn-pokeball:active {
-    transform: translateY(2px);
-    box-shadow: 
-      0 2px 0 hsl(0 85% 35%),
-      0 4px 10px hsl(0 85% 50% / 0.3);
+  .btn-outline:hover {
+    @apply bg-muted;
   }
 
-  /* Red glow effect */
-  .glow-red {
-    box-shadow: 0 0 60px 20px hsl(0 85% 50% / 0.3);
+  /* Stats card - CLAWDA style */
+  .stat-card {
+    @apply p-4;
+    background: hsl(var(--card));
+    border: 2px solid hsl(0 0% 20%);
   }
 
-  /* Dense table row hover */
-  .table-row-hover {
-    @apply transition-colors duration-100;
-  }
-  
-  .table-row-hover:hover {
-    @apply bg-primary/5;
+  .stat-label {
+    @apply text-xs uppercase tracking-wider text-muted-foreground font-mono;
   }
 
-  /* Status badges */
+  .stat-value {
+    @apply text-2xl font-bold text-primary font-mono;
+  }
+
+  /* Header bar */
+  .header-bar {
+    @apply py-2 px-4 flex items-center justify-between;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-bottom: 2px solid hsl(0 0% 20%);
+  }
+
+  /* Content box with black border */
+  .content-box {
+    background: hsl(var(--card));
+    border: 2px solid hsl(0 0% 20%);
+  }
+
+  /* Section header */
+  .section-header {
+    @apply px-4 py-2 font-mono text-sm uppercase tracking-wider;
+    background: hsl(var(--card));
+    border-bottom: 2px solid hsl(0 0% 20%);
+  }
+
+  /* Live indicator */
+  .live-indicator {
+    @apply inline-flex items-center gap-2 px-3 py-1;
+    background: hsl(var(--card));
+    border: 2px solid hsl(0 0% 20%);
+  }
+
+  .live-dot {
+    @apply w-2 h-2 bg-primary animate-pulse;
+  }
+
+  /* Badge styles */
   .badge-status {
-    @apply px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide;
+    @apply px-2 py-0.5 text-xs font-mono uppercase tracking-wide;
+    border: 1px solid currentColor;
   }
 
   .badge-live {
-    @apply bg-primary/20 text-primary;
+    @apply text-primary border-primary bg-primary/10;
   }
 
   .badge-verified {
-    @apply bg-[hsl(var(--status-verified))]/20 text-[hsl(var(--status-verified))];
+    @apply text-[hsl(var(--status-verified))] border-[hsl(var(--status-verified))] bg-[hsl(var(--status-verified))]/10;
   }
 
   .badge-pending {
-    @apply bg-[hsl(var(--status-pending))]/20 text-[hsl(var(--status-pending))];
+    @apply text-[hsl(var(--status-pending))] border-[hsl(var(--status-pending))] bg-[hsl(var(--status-pending))]/10;
   }
 
   /* Rarity badges */
   .badge-rarity {
-    @apply px-2 py-0.5 rounded text-xs font-semibold;
+    @apply px-2 py-0.5 text-xs font-mono uppercase;
+    border: 1px solid currentColor;
   }
 
   .badge-common {
-    @apply bg-[hsl(var(--rarity-common))]/20 text-[hsl(var(--rarity-common))];
+    @apply text-[hsl(var(--rarity-common))] border-[hsl(var(--rarity-common))];
   }
 
   .badge-uncommon {
-    @apply bg-[hsl(var(--rarity-uncommon))]/20 text-[hsl(var(--rarity-uncommon))];
+    @apply text-[hsl(var(--rarity-uncommon))] border-[hsl(var(--rarity-uncommon))];
   }
 
   .badge-rare {
-    @apply bg-[hsl(var(--rarity-rare))]/20 text-[hsl(var(--rarity-rare))];
+    @apply text-[hsl(var(--rarity-rare))] border-[hsl(var(--rarity-rare))];
   }
 
   .badge-ultra {
-    @apply bg-[hsl(var(--rarity-ultra))]/20 text-[hsl(var(--rarity-ultra))];
+    @apply text-[hsl(var(--rarity-ultra))] border-[hsl(var(--rarity-ultra))];
   }
 
   .badge-legendary {
-    @apply bg-[hsl(var(--rarity-legendary))]/20 text-[hsl(var(--rarity-legendary))];
+    @apply text-[hsl(var(--rarity-legendary))] border-[hsl(var(--rarity-legendary))];
   }
 
-  /* Sidebar nav item */
+  /* Nav item */
   .nav-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200;
-    @apply text-muted-foreground hover:text-foreground hover:bg-primary/10;
+    @apply flex items-center gap-3 px-4 py-2 text-sm font-medium transition-all;
+    @apply text-muted-foreground hover:text-foreground hover:bg-muted;
   }
 
   .nav-item.active {
-    @apply text-primary bg-primary/10;
-  }
-
-  /* Step indicator */
-  .step-indicator {
-    @apply w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold;
-    @apply bg-muted text-muted-foreground;
-  }
-
-  .step-indicator.active {
-    @apply bg-primary text-primary-foreground;
-  }
-
-  .step-indicator.completed {
-    @apply bg-primary/20 text-primary;
-  }
-
-  /* Upload zone */
-  .upload-zone {
-    @apply border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer transition-all duration-200;
-    @apply hover:border-primary/50 hover:bg-primary/5;
-  }
-
-  .upload-zone.active {
-    @apply border-primary bg-primary/10;
-  }
-
-  /* Verification progress */
-  .verify-step {
-    @apply flex items-center gap-3 py-2;
-  }
-
-  /* Stats */
-  .stat-number {
-    @apply text-4xl font-display text-foreground;
-  }
-
-  .stat-label {
-    @apply text-sm text-muted-foreground;
+    @apply text-primary-foreground bg-primary;
   }
 
   /* Gradient text */
@@ -247,15 +233,32 @@
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(
       135deg,
-      hsl(0 0% 100%) 0%,
-      hsl(0 85% 70%) 50%,
-      hsl(0 85% 50%) 100%
+      hsl(25 95% 53%) 0%,
+      hsl(35 95% 60%) 100%
     );
   }
 
   /* Red divider */
   .divider-red {
-    @apply h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent;
+    @apply h-0.5;
+    background: hsl(var(--primary));
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    @apply p-4 text-center cursor-pointer transition-all duration-200;
+    border: 2px dashed hsl(0 0% 60%);
+    background: hsl(var(--muted));
+  }
+
+  .upload-zone:hover {
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.05);
+  }
+
+  .upload-zone.active {
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.1);
   }
 }
 
@@ -266,29 +269,18 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background));
+  background: hsl(var(--muted));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary) / 0.3);
-  border-radius: 4px;
+  background: hsl(var(--border));
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary) / 0.5);
+  background: hsl(var(--primary));
 }
 
 /* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotateY(0); }
-  50% { transform: translateY(-20px) rotateY(180deg); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 30px hsl(0 85% 50% / 0.3); }
-  50% { box-shadow: 0 0 60px hsl(0 85% 50% / 0.5); }
-}
-
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -299,12 +291,8 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
 .animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
+  animation: fade-in 0.3s ease-out forwards;
 }
 
 .animate-count-up {
@@ -316,6 +304,22 @@
   font-variant-numeric: tabular-nums;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+/* Wallet adapter overrides */
+.wallet-adapter-button {
+  background: hsl(var(--primary)) !important;
+  border: 2px solid hsl(0 0% 20%) !important;
+  border-radius: 0 !important;
+  font-family: 'Space Mono', monospace !important;
+  text-transform: uppercase !important;
+  font-size: 12px !important;
+}
+
+.wallet-adapter-button:hover {
+  background: hsl(var(--primary) / 0.9) !important;
+}
+
+.wallet-adapter-modal-wrapper {
+  background: hsl(var(--card)) !important;
+  border: 2px solid hsl(0 0% 20%) !important;
+  border-radius: 0 !important;
 }
