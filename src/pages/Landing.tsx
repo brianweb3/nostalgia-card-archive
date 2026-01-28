@@ -2,19 +2,15 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PokeballScene } from "@/components/3d/PokeballScene";
-
 export default function Landing() {
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       {/* Main content */}
       <main className="container mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[90vh]">
           {/* Left - Text */}
           <div className="space-y-8">
             <div className="space-y-4">
-              <span className="text-primary font-mono text-sm uppercase">
-                ■ LIVE • AI-VERIFIED CARDS
-              </span>
+              
               <h1 className="font-display text-7xl md:text-8xl lg:text-9xl leading-none text-foreground">
                 POKE.FUN
               </h1>
@@ -45,6 +41,5 @@ export default function Landing() {
           </div>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 }
