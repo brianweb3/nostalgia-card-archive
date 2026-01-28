@@ -3,8 +3,12 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { 
   PanelLeftClose, 
-  PanelLeftOpen
+  PanelLeftOpen,
+  Copy,
+  Check
 } from "lucide-react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 // Custom SVG Icons
 const IconHome = () => (
@@ -64,8 +68,31 @@ const navItems = [
   { path: "/app/docs", icon: IconBook, label: "Manifesto" },
 ];
 
+// Contract address for COPY CA functionality
+const CONTRACT_ADDRESS = "COMING_SOON";
+
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const location = useLocation();
+  const { toast } = useToast();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyCA = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTRACT_ADDRESS);
+      setCopied(true);
+      toast({
+        title: "Copied!",
+        description: "Contract address copied to clipboard",
+      });
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to copy",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <aside
@@ -127,6 +154,16 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
           <IconX />
           {!collapsed && <span>X Community</span>}
         </a>
+
+        {/* Copy CA Button */}
+        <button
+          onClick={handleCopyCA}
+          className="flex items-center gap-3 px-3 py-2 transition-all duration-200 font-mono text-xs uppercase text-primary hover:bg-primary/10 w-full"
+          title={collapsed ? "Copy CA" : undefined}
+        >
+          {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+          {!collapsed && <span>{copied ? "Copied!" : "Copy CA"}</span>}
+        </button>
       </nav>
 
       {/* Collapse toggle */}

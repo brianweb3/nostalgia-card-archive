@@ -23,6 +23,7 @@ export type Database = {
           market_cap: number | null
           name: string
           progress: number | null
+          pumpfun_url: string | null
           rarity: Database["public"]["Enums"]["token_rarity"]
           status: Database["public"]["Enums"]["token_status"]
           ticker: string
@@ -37,6 +38,7 @@ export type Database = {
           market_cap?: number | null
           name: string
           progress?: number | null
+          pumpfun_url?: string | null
           rarity?: Database["public"]["Enums"]["token_rarity"]
           status?: Database["public"]["Enums"]["token_status"]
           ticker: string
@@ -51,6 +53,7 @@ export type Database = {
           market_cap?: number | null
           name?: string
           progress?: number | null
+          pumpfun_url?: string | null
           rarity?: Database["public"]["Enums"]["token_rarity"]
           status?: Database["public"]["Enums"]["token_status"]
           ticker?: string

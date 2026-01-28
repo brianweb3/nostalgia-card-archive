@@ -22,6 +22,7 @@ interface TokenForm {
   logoPreview: string | null;
   twitter: string;
   website: string;
+  pumpfun: string;
   walletAddress: string;
 }
 
@@ -43,6 +44,7 @@ const initialTokenForm: TokenForm = {
   logoPreview: null,
   twitter: "",
   website: "",
+  pumpfun: "",
   walletAddress: "",
 };
 
@@ -157,7 +159,8 @@ export function AdminPanel({ open, onClose }: AdminPanelProps) {
         rarity: 'common',
         market_cap: 0,
         progress: 100,
-      });
+        pumpfun_url: tokenForm.pumpfun || null,
+      } as any);
 
       if (error) throw error;
 
@@ -320,6 +323,13 @@ export function AdminPanel({ open, onClose }: AdminPanelProps) {
               value={tokenForm.description}
               onChange={(e) => setTokenForm(prev => ({ ...prev, description: e.target.value }))}
               className="bg-card border-2 border-foreground min-h-[80px]"
+            />
+
+            <Input
+              placeholder="Pump.fun URL"
+              value={tokenForm.pumpfun}
+              onChange={(e) => setTokenForm(prev => ({ ...prev, pumpfun: e.target.value }))}
+              className="bg-card border-2 border-foreground font-mono"
             />
 
             <div className="grid grid-cols-2 gap-4">
