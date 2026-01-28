@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User, PackageOpen } from "lucide-react";
+import { Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { TokenDetailModal } from "@/components/TokenDetailModal";
@@ -23,12 +23,12 @@ interface TokenData {
 }
 
 const filterPills = [
-  { id: "all", label: "All", icon: TrendingUp },
-  { id: "live", label: "Live", icon: Zap, dot: true },
-  { id: "new", label: "New", icon: Sparkles },
-  { id: "marketcap", label: "Market Cap", icon: DollarSign },
-  { id: "trending", label: "Trending", icon: Flame },
-  { id: "oldest", label: "Oldest", icon: Clock },
+  { id: "all", label: "ALL", icon: TrendingUp },
+  { id: "live", label: "LIVE", icon: Zap, dot: true },
+  { id: "new", label: "NEW", icon: Sparkles },
+  { id: "marketcap", label: "MCAP", icon: DollarSign },
+  { id: "trending", label: "HOT", icon: Flame },
+  { id: "oldest", label: "OLD", icon: Clock },
 ];
 
 const rarityColors: Record<string, string> = {
@@ -109,99 +109,102 @@ export default function LiveTokens() {
 
   return (
     <div className="p-6">
-      {/* Tabs */}
-      <div className="flex items-center gap-6 mb-6">
-        <button
-          onClick={() => setActiveTab("explore")}
-          className={cn(
-            "font-display text-2xl tracking-wide transition-colors",
-            activeTab === "explore"
-              ? "text-primary"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          EXPLORE
-        </button>
-        <button
-          onClick={() => setActiveTab("watchlist")}
-          className={cn(
-            "font-display text-2xl tracking-wide transition-colors",
-            activeTab === "watchlist"
-              ? "text-primary"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          WATCHLIST
-        </button>
+      {/* Header */}
+      <div className="content-box mb-6">
+        <div className="header-bar">
+          <span className="font-mono text-sm">LIVE TOKENS</span>
+          <span className="font-mono text-sm">{tokens.length} TOTAL</span>
+        </div>
+        
+        {/* Tabs */}
+        <div className="flex border-b-2 border-foreground">
+          <button
+            onClick={() => setActiveTab("explore")}
+            className={cn(
+              "px-6 py-3 font-mono text-sm uppercase transition-colors border-r-2 border-foreground",
+              activeTab === "explore"
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-muted"
+            )}
+          >
+            EXPLORE
+          </button>
+          <button
+            onClick={() => setActiveTab("watchlist")}
+            className={cn(
+              "px-6 py-3 font-mono text-sm uppercase transition-colors",
+              activeTab === "watchlist"
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-muted"
+            )}
+          >
+            WATCHLIST
+          </button>
+        </div>
       </div>
-
-      {/* Divider */}
-      <div className="divider-red mb-6" />
 
       {/* Filters */}
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        <div className="flex items-center gap-1 overflow-x-auto pb-2">
           {filterPills.map((pill) => (
             <button
               key={pill.id}
               onClick={() => setActiveFilter(pill.id)}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200",
+                "flex items-center gap-2 px-4 py-2 font-mono text-xs uppercase whitespace-nowrap transition-all border-2 border-foreground",
                 activeFilter === pill.id
                   ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
+                  : "bg-card hover:bg-muted"
               )}
             >
-              {pill.dot && <span className="w-2 h-2 rounded-full bg-current animate-pulse" />}
-              {pill.icon && <pill.icon className="w-4 h-4" />}
+              {pill.dot && <span className="w-2 h-2 bg-current animate-pulse" />}
+              {pill.icon && <pill.icon className="w-3 h-3" />}
               {pill.label}
             </button>
           ))}
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2 border-primary/30 hover:bg-primary/10">
-            <Filter className="w-4 h-4" />
-            Filter
-          </Button>
-          <div className="flex items-center bg-muted rounded-lg p-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn("w-8 h-8 rounded-md", viewMode === "grid" && "bg-primary text-primary-foreground")}
+          <div className="flex items-center border-2 border-foreground">
+            <button
+              className={cn(
+                "p-2 transition-colors",
+                viewMode === "grid" ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
+              )}
               onClick={() => setViewMode("grid")}
             >
               <LayoutGrid className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn("w-8 h-8 rounded-md", viewMode === "list" && "bg-primary text-primary-foreground")}
+            </button>
+            <button
+              className={cn(
+                "p-2 transition-colors border-l-2 border-foreground",
+                viewMode === "list" ? "bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
+              )}
               onClick={() => setViewMode("list")}
             >
               <List className="w-4 h-4" />
-            </Button>
+            </button>
           </div>
         </div>
       </div>
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center py-20">
+        <div className="content-box flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-muted-foreground">Loading tokens...</p>
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground font-mono text-sm">LOADING TOKENS...</p>
           </div>
         </div>
       )}
 
       {/* Empty State */}
       {!loading && tokens.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="content-box flex flex-col items-center justify-center py-20 text-center">
           <PackageOpen className="w-20 h-20 text-muted-foreground/50 mb-4" />
-          <h3 className="font-display text-2xl text-foreground mb-2">No Tokens Yet</h3>
-          <p className="text-muted-foreground max-w-md">
-            Be the first to create a verified trading card token! Go to the Create Token section to get started.
+          <h3 className="font-display text-2xl text-foreground mb-2">NO TOKENS YET</h3>
+          <p className="text-muted-foreground font-mono text-sm max-w-md">
+            Be the first to create a verified trading card token! Go to Create Token to get started.
           </p>
         </div>
       )}
@@ -213,16 +216,16 @@ export default function LiveTokens() {
             <div
               key={token.id}
               onClick={() => handleTokenClick(token)}
-              className="pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02] group animate-fade-in"
+              className="content-box cursor-pointer transition-all duration-200 hover:border-primary animate-fade-in"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div className="flex gap-3 p-4">
                 {/* Image */}
-                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 border-primary/20">
+                <div className="w-16 h-16 flex-shrink-0 border-2 border-foreground overflow-hidden">
                   <img
                     src={token.image}
                     alt={token.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 
@@ -230,35 +233,39 @@ export default function LiveTokens() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h3 className="font-semibold text-foreground truncate">{token.name}</h3>
-                      <p className="text-sm text-muted-foreground">${token.ticker}</p>
+                      <h3 className="font-mono text-sm font-bold text-foreground truncate">{token.name}</h3>
+                      <p className="font-mono text-xs text-primary">${token.ticker}</p>
                     </div>
                     <span className={cn("badge-rarity", rarityColors[token.rarity || "common"])}>
                       {token.rarity}
                     </span>
                   </div>
                   
-                  <div className="flex items-center gap-1.5 mt-1.5 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5 mt-1 font-mono text-[10px] text-muted-foreground">
                     <User className="w-3 h-3" />
-                    <span className="font-mono">{token.creator}</span>
+                    <span>{token.creator}</span>
                     <span>·</span>
                     <Clock className="w-3 h-3" />
                     <span>{token.time}</span>
                   </div>
-
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="font-display text-lg text-foreground">
-                      ${token.marketCap}
-                    </span>
-                    
-                    {/* Progress bar */}
-                    <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-1000"
-                        style={{ width: `${token.progress}%` }}
-                      />
-                    </div>
+                </div>
+              </div>
+              
+              {/* Footer */}
+              <div className="px-4 py-2 border-t-2 border-foreground bg-muted/50 flex items-center justify-between">
+                <span className="font-mono text-sm text-primary font-bold">
+                  ${token.marketCap}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-16 h-1.5 bg-muted border border-foreground overflow-hidden">
+                    <div
+                      className="h-full bg-primary transition-all duration-1000"
+                      style={{ width: `${token.progress}%` }}
+                    />
                   </div>
+                  <span className="font-mono text-[10px] text-muted-foreground">
+                    {token.progress}%
+                  </span>
                 </div>
               </div>
             </div>

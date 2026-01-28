@@ -19,7 +19,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <div
         className={cn(
           "min-h-screen transition-all duration-200 flex flex-col",
-          sidebarCollapsed ? "ml-16" : "ml-56"
+          sidebarCollapsed ? "ml-14" : "ml-52"
         )}
       >
         <AppHeader />

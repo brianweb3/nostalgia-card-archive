@@ -56,15 +56,21 @@ export function TokenDetailModal({ token, open, onClose }: TokenDetailModalProps
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg bg-card border-primary/20">
-        <DialogHeader>
-          <DialogTitle className="sr-only">{token.name} Details</DialogTitle>
+      <DialogContent className="max-w-lg bg-card border-2 border-foreground p-0 rounded-none">
+        <DialogHeader className="sr-only">
+          <DialogTitle>{token.name} Details</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        {/* Header bar */}
+        <div className="header-bar">
+          <span className="font-mono text-sm">{token.name}</span>
+          <span className="font-mono text-sm">${token.ticker}</span>
+        </div>
+        
+        <div className="p-6 space-y-6">
           {/* Card Image & Basic Info */}
           <div className="flex gap-4">
-            <div className="w-32 h-32 rounded-xl overflow-hidden border-2 border-primary/30 flex-shrink-0">
+            <div className="w-24 h-24 border-2 border-foreground flex-shrink-0 overflow-hidden">
               <img
                 src={token.image}
                 alt={token.name}
@@ -76,74 +82,50 @@ export function TokenDetailModal({ token, open, onClose }: TokenDetailModalProps
               <div className="flex items-start justify-between">
                 <div>
                   <h2 className="font-display text-2xl text-foreground">{token.name}</h2>
-                  <p className="text-muted-foreground font-mono">${token.ticker}</p>
+                  <p className="text-primary font-mono">${token.ticker}</p>
                 </div>
                 {token.rarity && (
-                  <span className={cn("badge-rarity text-sm", rarityColors[token.rarity])}>
+                  <span className={cn("badge-rarity", rarityColors[token.rarity])}>
                     {token.rarity}
                   </span>
                 )}
               </div>
               
               {token.description && (
-                <p className="text-sm text-muted-foreground">{token.description}</p>
+                <p className="text-sm text-muted-foreground font-mono">{token.description}</p>
               )}
             </div>
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-muted/50 rounded-lg p-4 space-y-1">
-              <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                <TrendingUp className="w-4 h-4" />
-                Market Cap
+          <div className="grid grid-cols-2 gap-2">
+            <div className="p-3 border-2 border-foreground">
+              <div className="flex items-center gap-2 text-muted-foreground font-mono text-xs mb-1">
+                <TrendingUp className="w-3 h-3" />
+                MARKET CAP
               </div>
-              <div className="font-display text-2xl text-foreground">${token.marketCap}</div>
+              <div className="font-mono text-lg text-primary font-bold">${token.marketCap}</div>
             </div>
             
-            {token.change !== undefined && token.change !== null && (
-              <div className="bg-muted/50 rounded-lg p-4 space-y-1">
-                <div className="text-muted-foreground text-sm">24h Change</div>
-                <div className={cn(
-                  "font-display text-2xl",
-                  token.change >= 0 ? "text-[hsl(var(--status-verified))]" : "text-destructive"
-                )}>
-                  {token.change >= 0 ? "+" : ""}{token.change.toFixed(2)}%
-                </div>
+            <div className="p-3 border-2 border-foreground">
+              <div className="flex items-center gap-2 text-muted-foreground font-mono text-xs mb-1">
+                <User className="w-3 h-3" />
+                CREATOR
               </div>
-            )}
-            
-            {token.creator && (
-              <div className="bg-muted/50 rounded-lg p-4 space-y-1">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <User className="w-4 h-4" />
-                  Creator
-                </div>
-                <div className="font-mono text-foreground">{token.creator}</div>
-              </div>
-            )}
-            
-            {token.time && (
-              <div className="bg-muted/50 rounded-lg p-4 space-y-1">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <Clock className="w-4 h-4" />
-                  Listed
-                </div>
-                <div className="text-foreground">{token.time} ago</div>
-              </div>
-            )}
+              <div className="font-mono text-sm text-foreground">{token.creator || 'Unknown'}</div>
+            </div>
           </div>
 
           {/* Progress Bar */}
           {token.progress !== undefined && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Bonding Progress</span>
-                <span className="text-foreground font-medium">{token.progress}%</span>
+            <div className="p-3 border-2 border-foreground">
+              <div className="flex justify-between font-mono text-xs mb-2">
+                <span className="text-muted-foreground">BONDING PROGRESS</span>
+                <span className="text-primary">{token.progress}%</span>
               </div>
-              <div className="h-2 bg-muted rounded-full overflow-hidden">
+              <div className="h-2 bg-muted border border-foreground overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-500"
+                  className="h-full bg-primary transition-all duration-500"
                   style={{ width: `${token.progress}%` }}
                 />
               </div>
@@ -151,43 +133,44 @@ export function TokenDetailModal({ token, open, onClose }: TokenDetailModalProps
           )}
 
           {/* Verification Badge */}
-          <div className="flex items-center gap-3 p-3 bg-[hsl(var(--status-verified))]/10 rounded-lg border border-[hsl(var(--status-verified))]/20">
+          <div className="flex items-center gap-3 p-3 border-2 border-[hsl(var(--status-verified))] bg-[hsl(var(--status-verified))]/10">
             <Shield className="w-5 h-5 text-[hsl(var(--status-verified))]" />
             <div className="flex-1">
-              <div className="text-sm font-medium text-foreground">AI Verified</div>
-              <div className="text-xs text-muted-foreground">{verifiedDate}</div>
+              <div className="font-mono text-xs font-bold text-foreground">AI VERIFIED</div>
+              <div className="font-mono text-[10px] text-muted-foreground">{verifiedDate}</div>
             </div>
             <CheckCircle className="w-5 h-5 text-[hsl(var(--status-verified))]" />
           </div>
 
           {/* Pump.fun Link */}
-          <div className="space-y-2">
-            <label className="text-sm text-muted-foreground">Pump.fun Link</label>
-            <div className="flex gap-2">
-              <div className="flex-1 bg-muted rounded-lg px-3 py-2 font-mono text-sm text-foreground truncate">
-                {pumpfunUrl}
-              </div>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleCopy}
-                className="border-primary/30 hover:bg-primary/10"
-              >
-                {copied ? <CheckCircle className="w-4 h-4 text-[hsl(var(--status-verified))]" /> : <Copy className="w-4 h-4" />}
-              </Button>
+          <div className="flex gap-2">
+            <div className="flex-1 border-2 border-foreground px-3 py-2 font-mono text-xs text-foreground truncate bg-muted">
+              {pumpfunUrl}
             </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleCopy}
+              className="border-2 border-foreground"
+            >
+              {copied ? <CheckCircle className="w-4 h-4 text-[hsl(var(--status-verified))]" /> : <Copy className="w-4 h-4" />}
+            </Button>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <Button
-              className="flex-1 gap-2 bg-primary hover:bg-primary/90"
+              className="flex-1 gap-2 bg-primary border-2 border-foreground font-mono text-xs uppercase"
               onClick={() => window.open(pumpfunUrl, "_blank")}
             >
               Trade on Pump.fun
               <ExternalLink className="w-4 h-4" />
             </Button>
-            <Button variant="outline" className="border-primary/30 hover:bg-primary/10" onClick={onClose}>
+            <Button 
+              variant="outline" 
+              className="border-2 border-foreground font-mono text-xs uppercase" 
+              onClick={onClose}
+            >
               Close
             </Button>
           </div>
