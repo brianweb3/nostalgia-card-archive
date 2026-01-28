@@ -10,6 +10,7 @@ import LiveTokens from "./pages/LiveTokens";
 import CreateToken from "./pages/CreateToken";
 import Stats from "./pages/Stats";
 import Docs from "./pages/Docs";
+import Verifications from "./pages/Verifications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             {/* App pages with sidebar */}
             <Route path="/app" element={<AppLayout><LiveTokens /></AppLayout>} />
             <Route path="/app/create" element={<AppLayout><CreateToken /></AppLayout>} />
+            <Route path="/app/verifications" element={<AppLayout><Verifications /></AppLayout>} />
             <Route path="/app/stats" element={<AppLayout><Stats /></AppLayout>} />
             <Route path="/app/docs" element={<AppLayout><Docs /></AppLayout>} />
             
