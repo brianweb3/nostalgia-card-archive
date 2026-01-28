@@ -1,33 +1,38 @@
-import { Search, Radio, PlusCircle, Wallet, Zap } from "lucide-react";
+import { PlusCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { usePhantomWallet } from "@/hooks/usePhantomWallet";
+
+// Phantom icon
+const PhantomIcon = () => (
+  <svg viewBox="0 0 128 128" className="w-5 h-5">
+    <circle cx="64" cy="64" r="64" fill="url(#phantom-gradient)" />
+    <path
+      d="M110.584 64.9142H99.142C99.142 41.7651 80.173 23 56.7724 23C33.6612 23 14.8716 41.3057 14.4118 64.0583C13.936 87.5493 34.7821 107 58.3423 107H63.5755C84.4216 107 110.584 89.1089 110.584 64.9142ZM42.2821 68.5198C42.2821 72.0141 39.4351 74.8528 35.9301 74.8528C32.4251 74.8528 29.578 72.0141 29.578 68.5198V60.5604C29.578 57.0661 32.4251 54.2274 35.9301 54.2274C39.4351 54.2274 42.2821 57.0661 42.2821 60.5604V68.5198ZM65.5874 68.5198C65.5874 72.0141 62.7403 74.8528 59.2353 74.8528C55.7303 74.8528 52.8833 72.0141 52.8833 68.5198V60.5604C52.8833 57.0661 55.7303 54.2274 59.2353 54.2274C62.7403 54.2274 65.5874 57.0661 65.5874 60.5604V68.5198Z"
+      fill="white"
+    />
+    <defs>
+      <linearGradient id="phantom-gradient" x1="64" y1="0" x2="64" y2="128" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#534BB1" />
+        <stop offset="1" stopColor="#551BF9" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
 export function AppHeader() {
+  const { walletAddress, isConnecting, isConnected, connect, disconnect, shortenAddress } = usePhantomWallet();
+
   return (
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40 flex items-center justify-between px-6">
-      {/* Search */}
-      <div className="relative w-80">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search tokens..."
-          className="w-full h-10 pl-10 pr-12 rounded-xl bg-muted/50 border border-border text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
-        />
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-xs text-muted-foreground">
-          <kbd className="px-1.5 py-0.5 rounded bg-background border border-border">⌘</kbd>
-          <kbd className="px-1.5 py-0.5 rounded bg-background border border-border">K</kbd>
-        </div>
+      {/* Live indicator */}
+      <div className="flex items-center gap-2 text-sm text-primary">
+        <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+        <span className="font-display text-lg">142 LIVE</span>
       </div>
 
       {/* Right actions */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 text-sm text-primary">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="font-medium">142 Live</span>
-        </div>
-        
-        <div className="w-px h-6 bg-border" />
-        
         <Link to="/app/create">
           <Button size="sm" className="gap-2 bg-primary hover:bg-primary/90">
             <PlusCircle className="w-4 h-4" />
@@ -35,12 +40,34 @@ export function AppHeader() {
           </Button>
         </Link>
         
-        <Button variant="outline" size="sm" className="gap-2 border-primary/30 hover:bg-primary/10">
-          <div className="w-5 h-5 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-            <Wallet className="w-3 h-3 text-primary-foreground" />
-          </div>
-          <span className="font-mono text-xs">63W2Jt...</span>
-        </Button>
+        <div className="w-px h-6 bg-border" />
+        
+        {isConnected ? (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={disconnect}
+            className="gap-2 border-primary/30 hover:bg-primary/10"
+          >
+            <PhantomIcon />
+            <span className="font-mono text-xs">{shortenAddress(walletAddress)}</span>
+          </Button>
+        ) : (
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={connect}
+            disabled={isConnecting}
+            className="gap-2 border-primary/30 hover:bg-primary/10"
+          >
+            {isConnecting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <PhantomIcon />
+            )}
+            <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+          </Button>
+        )}
       </div>
     </header>
   );
