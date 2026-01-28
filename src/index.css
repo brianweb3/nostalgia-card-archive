@@ -18,8 +18,8 @@
     --popover: 40 30% 98%;
     --popover-foreground: 0 0% 10%;
 
-    /* Primary - Orange/Red accent */
-    --primary: 25 95% 53%;
+    /* Primary - Red accent */
+    --primary: 0 72% 51%;
     --primary-foreground: 0 0% 100%;
 
     /* Secondary */
@@ -31,7 +31,7 @@
     --muted-foreground: 0 0% 45%;
 
     /* Accent */
-    --accent: 25 95% 53%;
+    --accent: 0 72% 51%;
     --accent-foreground: 0 0% 100%;
 
     /* Rarity colors */
@@ -44,7 +44,7 @@
     /* Status colors */
     --status-pending: 38 92% 50%;
     --status-verified: 142 76% 40%;
-    --status-live: 25 95% 53%;
+    --status-live: 0 72% 51%;
     --status-rejected: 0 72% 51%;
 
     /* UI colors */
@@ -53,19 +53,19 @@
 
     --border: 0 0% 20%;
     --input: 0 0% 85%;
-    --ring: 25 95% 53%;
+    --ring: 0 72% 51%;
 
     --radius: 0rem;
 
     /* Sidebar - dark */
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 25 95% 53%;
+    --sidebar-primary: 0 72% 51%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 12%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 25 95% 53%;
+    --sidebar-ring: 0 72% 51%;
   }
 }
 
@@ -233,8 +233,8 @@
     @apply bg-clip-text text-transparent;
     background-image: linear-gradient(
       135deg,
-      hsl(25 95% 53%) 0%,
-      hsl(35 95% 60%) 100%
+      hsl(0 72% 51%) 0%,
+      hsl(0 72% 60%) 100%
     );
   }
 
