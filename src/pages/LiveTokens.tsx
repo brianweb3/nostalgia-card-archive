@@ -1,51 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User, PackageOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { TokenDetailModal } from "@/components/TokenDetailModal";
-
-// Import monster images
-import monsterFire from "@/assets/monster-fire.png";
-import monsterWater from "@/assets/monster-water.png";
-import monsterPlant from "@/assets/monster-plant.png";
-import monsterElectric from "@/assets/monster-electric.png";
-import monsterShadow from "@/assets/monster-shadow.png";
-import monsterLegendary from "@/assets/monster-legendary.png";
-
-// Animated number component for inline use
-function AnimatedValue({ value, prefix = "", suffix = "" }: { value: string; prefix?: string; suffix?: string }) {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <span
-      ref={ref}
-      className={cn(
-        "font-display tabular-nums transition-all duration-500",
-        isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
-      )}
-    >
-      {prefix}{value}{suffix}
-    </span>
-  );
-}
+import { supabase } from "@/integrations/supabase/client";
 
 // Token interface
 interface TokenData {
@@ -64,38 +22,12 @@ interface TokenData {
   pumpfunUrl?: string;
 }
 
-// Trending tokens data
-const trendingTokens: TokenData[] = [
-  { id: "1", name: "Charizard Holo", ticker: "CHAR", marketCap: "3.56M", image: monsterFire, description: "1st Edition PSA 10 - The holy grail", verifiedAt: "Jan 15, 2024" },
-  { id: "2", name: "Blastoise Prime", ticker: "BLAST", marketCap: "8.10M", image: monsterWater, description: "Base Set Unlimited - Pristine condition", verifiedAt: "Jan 12, 2024" },
-  { id: "3", name: "Venusaur 1st", ticker: "VENU", marketCap: "968.35K", image: monsterPlant, description: "Shadowless 1st Edition - Rare find", verifiedAt: "Jan 10, 2024" },
-  { id: "4", name: "Pikachu VMAX", ticker: "PIKA", marketCap: "92.37M", image: monsterElectric, description: "Rainbow Rare - Fan favorite", verifiedAt: "Jan 8, 2024" },
-  { id: "5", name: "Gengar Alt", ticker: "GENG", marketCap: "983.93K", image: monsterShadow, description: "Alternate Art - Ghost power", verifiedAt: "Jan 5, 2024" },
-  { id: "6", name: "Mew Gold Star", ticker: "MEW", marketCap: "7.78M", image: monsterLegendary, description: "Gold Star Series - Legendary", verifiedAt: "Jan 3, 2024" },
-];
-
-// All tokens data
-const allTokens: TokenData[] = [
-  { id: "1", name: "Satoshi", ticker: "SATO", creator: "HUgpmq", time: "2m", marketCap: "3.5K", progress: 35, change: 12.5, image: monsterFire, rarity: "rare", description: "First edition holographic", verifiedAt: "Jan 28, 2024 10:30 AM" },
-  { id: "2", name: "Estcru LLC", ticker: "ESTC", creator: "7LL9li", time: "55m", marketCap: "9.0K", progress: 65, change: -18.00, image: monsterWater, rarity: "uncommon", description: "Water type collector's edition", verifiedAt: "Jan 28, 2024 09:15 AM" },
-  { id: "3", name: "Steaks 500", ticker: "SNB", creator: "DQfd5M", time: "12m", marketCap: "15.8K", progress: 45, change: -11.00, image: monsterPlant, rarity: "common", description: "Nature series card", verifiedAt: "Jan 28, 2024 11:45 AM" },
-  { id: "4", name: "Bored Penguin", ticker: "BPYC", creator: "CqFYQU", time: "10m", marketCap: "6.2K", progress: 25, change: 0.16, image: monsterShadow, rarity: "ultra", description: "Ultra rare shadow variant", verifiedAt: "Jan 28, 2024 08:20 AM" },
-  { id: "5", name: "24/7 Trading", ticker: "HOOD", creator: "4jsHZ8", time: "59m", marketCap: "243.2K", progress: 85, change: -36.24, image: monsterElectric, rarity: "rare", description: "Electric type promo card", verifiedAt: "Jan 27, 2024 04:00 PM" },
-  { id: "6", name: "US Card", ticker: "USTP", creator: "DWPphp", time: "20m", marketCap: "19.1K", progress: 55, change: -5.76, image: monsterLegendary, rarity: "legendary", description: "Legendary series - mint condition", verifiedAt: "Jan 28, 2024 07:30 AM" },
-  { id: "7", name: "Gold Silver", ticker: "PKMN", creator: "CTDMaY", time: "10h", marketCap: "2.6M", progress: 90, change: -14.62, image: monsterFire, rarity: "rare", description: "Gold & Silver edition", verifiedAt: "Jan 26, 2024 02:15 PM" },
-  { id: "8", name: "Digi Silver", ticker: "DIGI", creator: "9a8TA5", time: "4m", marketCap: "4.6K", progress: 40, change: 13.15, image: monsterWater, rarity: "uncommon", description: "Digital crossover edition", verifiedAt: "Jan 28, 2024 12:00 PM" },
-  { id: "9", name: "Lumi", ticker: "LUMI", creator: "EiwjoW", time: "3h", marketCap: "1.2K", progress: 15, change: null, image: monsterPlant, rarity: "common", description: "Luminous plant type", verifiedAt: "Jan 28, 2024 06:45 AM" },
-  { id: "10", name: "Dog Town", ticker: "IDYL", creator: "ApNyqP", time: "9m", marketCap: "8.4K", progress: 50, change: 8.2, image: monsterShadow, rarity: "rare", description: "Shadow realm special", verifiedAt: "Jan 28, 2024 11:00 AM" },
-  { id: "11", name: "Ikea Monk", ticker: "MONK", creator: "9cscgf", time: "1y", marketCap: "156K", progress: 75, change: null, image: monsterElectric, rarity: "ultra", description: "Ultra thunder monk", verifiedAt: "Jan 1, 2024 03:30 PM" },
-  { id: "12", name: "Orangutan", ticker: "ORANG", creator: "4vNgQp", time: "6m", marketCap: "2.1K", progress: 20, change: 5.5, image: monsterLegendary, rarity: "legendary", description: "Legendary beast card", verifiedAt: "Jan 28, 2024 10:00 AM" },
-];
-
 const filterPills = [
-  { id: "movers", label: "Movers", icon: TrendingUp, active: true },
+  { id: "all", label: "All", icon: TrendingUp },
   { id: "live", label: "Live", icon: Zap, dot: true },
   { id: "new", label: "New", icon: Sparkles },
-  { id: "marketcap", label: "Market cap", icon: DollarSign },
-  { id: "mayhem", label: "Mayhem", icon: Flame },
+  { id: "marketcap", label: "Market Cap", icon: DollarSign },
+  { id: "trending", label: "Trending", icon: Flame },
   { id: "oldest", label: "Oldest", icon: Clock },
 ];
 
@@ -108,11 +40,67 @@ const rarityColors: Record<string, string> = {
 };
 
 export default function LiveTokens() {
-  const [activeFilter, setActiveFilter] = useState("movers");
+  const [activeFilter, setActiveFilter] = useState("all");
   const [activeTab, setActiveTab] = useState("explore");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedToken, setSelectedToken] = useState<TokenData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [tokens, setTokens] = useState<TokenData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load tokens from database
+  useEffect(() => {
+    loadTokens();
+    
+    // Set up real-time subscription
+    const channel = supabase
+      .channel('tokens-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'tokens' },
+        () => {
+          loadTokens();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const loadTokens = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('tokens')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      const formattedTokens: TokenData[] = (data || []).map(token => ({
+        id: token.id,
+        name: token.name,
+        ticker: token.ticker,
+        creator: token.wallet_address?.slice(0, 6) || 'Unknown',
+        time: getTimeAgo(new Date(token.created_at)),
+        marketCap: formatMarketCap(token.market_cap || 0),
+        progress: token.progress || 0,
+        change: null,
+        image: token.image_url || '/placeholder.svg',
+        rarity: token.rarity || 'common',
+        description: token.description || '',
+        verifiedAt: new Date(token.created_at).toLocaleString(),
+        pumpfunUrl: `https://pump.fun/coin/${token.ticker?.toLowerCase()}`,
+      }));
+
+      setTokens(formattedTokens);
+    } catch (error) {
+      console.error('Error loading tokens:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleTokenClick = (token: TokenData) => {
     setSelectedToken(token);
@@ -121,61 +109,12 @@ export default function LiveTokens() {
 
   return (
     <div className="p-6">
-      {/* Trending Section */}
-      <section className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display text-3xl text-foreground">TRENDING CARDS</h2>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-primary/10">
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <Button variant="ghost" size="icon" className="w-8 h-8 hover:bg-primary/10">
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-        
-        <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
-          {trendingTokens.map((token, index) => (
-            <div
-              key={token.id}
-              onClick={() => handleTokenClick(token)}
-              className="flex-shrink-0 w-56 pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02]"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={token.image}
-                  alt={token.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-                <div className="absolute bottom-3 left-3 right-3">
-                  <div className="font-display text-2xl text-white">
-                    $<AnimatedValue value={token.marketCap} />
-                  </div>
-                  <div className="text-sm text-white/90">
-                    {token.name} <span className="text-white/50">{token.ticker}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="p-3">
-                <p className="text-xs text-muted-foreground line-clamp-2">{token.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="divider-red mb-6" />
-
       {/* Tabs */}
-      <div className="flex items-center gap-6 mb-4">
+      <div className="flex items-center gap-6 mb-6">
         <button
           onClick={() => setActiveTab("explore")}
           className={cn(
-            "font-display text-xl tracking-wide transition-colors",
+            "font-display text-2xl tracking-wide transition-colors",
             activeTab === "explore"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground"
@@ -186,7 +125,7 @@ export default function LiveTokens() {
         <button
           onClick={() => setActiveTab("watchlist")}
           className={cn(
-            "font-display text-xl tracking-wide transition-colors",
+            "font-display text-2xl tracking-wide transition-colors",
             activeTab === "watchlist"
               ? "text-primary"
               : "text-muted-foreground hover:text-foreground"
@@ -195,6 +134,9 @@ export default function LiveTokens() {
           WATCHLIST
         </button>
       </div>
+
+      {/* Divider */}
+      <div className="divider-red mb-6" />
 
       {/* Filters */}
       <div className="flex items-center justify-between mb-6">
@@ -243,72 +185,86 @@ export default function LiveTokens() {
         </div>
       </div>
 
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading tokens...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && tokens.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <PackageOpen className="w-20 h-20 text-muted-foreground/50 mb-4" />
+          <h3 className="font-display text-2xl text-foreground mb-2">No Tokens Yet</h3>
+          <p className="text-muted-foreground max-w-md">
+            Be the first to create a verified trading card token! Go to the Create Token section to get started.
+          </p>
+        </div>
+      )}
+
       {/* Token Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {allTokens.map((token, index) => (
-          <div
-            key={token.id}
-            onClick={() => handleTokenClick(token)}
-            className="pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02] group animate-fade-in"
-            style={{ animationDelay: `${index * 50}ms` }}
-          >
-            <div className="flex gap-3 p-4">
-              {/* Image */}
-              <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 border-primary/20">
-                <img
-                  src={token.image}
-                  alt={token.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-              
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-semibold text-foreground truncate">{token.name}</h3>
-                    <p className="text-sm text-muted-foreground">{token.ticker}</p>
-                  </div>
-                  <span className={cn("badge-rarity", rarityColors[token.rarity || "common"])}>
-                    {token.rarity}
-                  </span>
+      {!loading && tokens.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {tokens.map((token, index) => (
+            <div
+              key={token.id}
+              onClick={() => handleTokenClick(token)}
+              className="pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02] group animate-fade-in"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <div className="flex gap-3 p-4">
+                {/* Image */}
+                <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 border-primary/20">
+                  <img
+                    src={token.image}
+                    alt={token.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
                 </div>
                 
-                <div className="flex items-center gap-1.5 mt-1.5 text-xs text-muted-foreground">
-                  <User className="w-3 h-3" />
-                  <span className="font-mono">{token.creator}</span>
-                  <span>·</span>
-                  <Clock className="w-3 h-3" />
-                  <span>{token.time}</span>
-                </div>
-
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="font-display text-lg text-foreground">
-                    $<AnimatedValue value={token.marketCap} />
-                  </span>
-                  
-                  {/* Progress bar */}
-                  <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-1000"
-                      style={{ width: `${token.progress}%` }}
-                    />
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 className="font-semibold text-foreground truncate">{token.name}</h3>
+                      <p className="text-sm text-muted-foreground">${token.ticker}</p>
+                    </div>
+                    <span className={cn("badge-rarity", rarityColors[token.rarity || "common"])}>
+                      {token.rarity}
+                    </span>
                   </div>
                   
-                  {token.change !== null && (
-                    <span className={cn(
-                      "font-display text-sm",
-                      token.change >= 0 ? "text-[hsl(var(--status-verified))]" : "text-destructive"
-                    )}>
-                      {token.change >= 0 ? "+" : ""}{token.change.toFixed(2)}%
+                  <div className="flex items-center gap-1.5 mt-1.5 text-xs text-muted-foreground">
+                    <User className="w-3 h-3" />
+                    <span className="font-mono">{token.creator}</span>
+                    <span>·</span>
+                    <Clock className="w-3 h-3" />
+                    <span>{token.time}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="font-display text-lg text-foreground">
+                      ${token.marketCap}
                     </span>
-                  )}
+                    
+                    {/* Progress bar */}
+                    <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-1000"
+                        style={{ width: `${token.progress}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Token Detail Modal */}
       <TokenDetailModal
@@ -318,4 +274,22 @@ export default function LiveTokens() {
       />
     </div>
   );
+}
+
+// Helper functions
+function getTimeAgo(date: Date): string {
+  const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+  
+  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
+  if (seconds < 2592000) return `${Math.floor(seconds / 86400)}d`;
+  if (seconds < 31536000) return `${Math.floor(seconds / 2592000)}mo`;
+  return `${Math.floor(seconds / 31536000)}y`;
+}
+
+function formatMarketCap(value: number): string {
+  if (value >= 1000000) return `${(value / 1000000).toFixed(2)}M`;
+  if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+  return value.toString();
 }
