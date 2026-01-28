@@ -47,7 +47,7 @@ const navItems = [
   { path: "/app", icon: IconHome, label: "Live Tokens" },
   { path: "/app/create", icon: IconBolt, label: "Create Token" },
   { path: "/app/stats", icon: IconChart, label: "Statistics" },
-  { path: "/app/docs", icon: IconBook, label: "Documentation" },
+  { path: "/app/docs", icon: IconBook, label: "Manifesto" },
 ];
 
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
