@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,103 +6,66 @@
 
 @layer base {
   :root {
-    /* Core backgrounds - warm paper stock feel */
-    --background: 40 33% 94%;
-    --foreground: 30 20% 15%;
+    /* Dark app-like background */
+    --background: 220 20% 10%;
+    --foreground: 220 10% 90%;
 
-    /* Card surface - cream like old card stock */
-    --card: 45 40% 96%;
-    --card-foreground: 30 20% 15%;
+    /* Card/surface - slightly lighter */
+    --card: 220 18% 14%;
+    --card-foreground: 220 10% 90%;
 
     /* Popover */
-    --popover: 45 40% 98%;
-    --popover-foreground: 30 20% 15%;
+    --popover: 220 18% 12%;
+    --popover-foreground: 220 10% 90%;
 
-    /* Primary - classic card game red */
-    --primary: 0 70% 50%;
+    /* Primary - vibrant green for live/success */
+    --primary: 142 70% 45%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - soft blue */
-    --secondary: 210 60% 55%;
+    /* Secondary - blue for actions */
+    --secondary: 210 70% 50%;
     --secondary-foreground: 0 0% 100%;
 
     /* Muted */
-    --muted: 40 20% 88%;
-    --muted-foreground: 30 15% 45%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 55%;
 
-    /* Accent - warm gold */
+    /* Accent - gold/yellow for highlights */
     --accent: 45 90% 55%;
-    --accent-foreground: 30 20% 15%;
+    --accent-foreground: 220 20% 10%;
 
     /* Rarity colors */
-    --rarity-common: 30 10% 55%;
-    --rarity-uncommon: 140 45% 42%;
-    --rarity-rare: 210 65% 50%;
-    --rarity-ultra: 280 60% 55%;
-    --rarity-legendary: 45 95% 50%;
+    --rarity-common: 220 10% 55%;
+    --rarity-uncommon: 142 50% 45%;
+    --rarity-rare: 210 70% 55%;
+    --rarity-ultra: 280 60% 60%;
+    --rarity-legendary: 45 95% 55%;
 
     /* Status colors */
     --status-pending: 35 90% 55%;
-    --status-verified: 140 55% 45%;
+    --status-verified: 142 70% 45%;
+    --status-live: 142 70% 45%;
+    --status-rejected: 0 70% 55%;
 
     /* UI colors */
-    --destructive: 0 70% 50%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 25% 82%;
-    --input: 35 25% 82%;
-    --ring: 0 70% 50%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 142 70% 45%;
 
-    --radius: 1rem;
-
-    /* Card specific */
-    --card-border: 35 30% 70%;
-    --card-shadow: 30 30% 60%;
-    --card-highlight: 45 80% 85%;
+    --radius: 0.5rem;
 
     /* Sidebar */
-    --sidebar-background: 40 30% 92%;
-    --sidebar-foreground: 30 20% 15%;
-    --sidebar-primary: 0 70% 50%;
+    --sidebar-background: 220 20% 8%;
+    --sidebar-foreground: 220 10% 90%;
+    --sidebar-primary: 142 70% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 45 40% 88%;
-    --sidebar-accent-foreground: 30 20% 15%;
-    --sidebar-border: 35 25% 82%;
-    --sidebar-ring: 0 70% 50%;
-
-    /* Sparkle effect */
-    --sparkle: 45 100% 70%;
-  }
-
-  .dark {
-    --background: 30 15% 12%;
-    --foreground: 40 30% 92%;
-    --card: 30 15% 16%;
-    --card-foreground: 40 30% 92%;
-    --popover: 30 15% 14%;
-    --popover-foreground: 40 30% 92%;
-    --primary: 0 65% 55%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 55% 50%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 30 12% 22%;
-    --muted-foreground: 40 15% 60%;
-    --accent: 45 85% 50%;
-    --accent-foreground: 30 20% 10%;
-    --border: 30 12% 25%;
-    --input: 30 12% 25%;
-    --ring: 0 65% 55%;
-    --card-border: 30 15% 30%;
-    --card-shadow: 30 10% 8%;
-    --card-highlight: 45 60% 40%;
-    --sidebar-background: 30 15% 10%;
-    --sidebar-foreground: 40 30% 92%;
-    --sidebar-primary: 0 65% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 30 12% 18%;
-    --sidebar-accent-foreground: 40 30% 92%;
-    --sidebar-border: 30 12% 25%;
-    --sidebar-ring: 0 65% 55%;
+    --sidebar-accent: 220 15% 15%;
+    --sidebar-accent-foreground: 220 10% 90%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 142 70% 45%;
   }
 }
 
@@ -113,197 +76,153 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Nunito', sans-serif;
-  }
-
-  /* Paper texture overlay */
-  .paper-texture {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.03;
+    font-family: 'Inter', sans-serif;
   }
 }
 
 @layer components {
-  /* Card frame styles */
-  .card-frame {
-    @apply relative rounded-2xl overflow-hidden;
-    background: linear-gradient(
-      145deg,
-      hsl(var(--card-highlight)) 0%,
-      hsl(var(--card)) 50%,
-      hsl(var(--card-border)) 100%
-    );
-    box-shadow: 
-      0 4px 6px -1px hsl(var(--card-shadow) / 0.15),
-      0 10px 20px -5px hsl(var(--card-shadow) / 0.2),
-      inset 0 1px 2px hsl(var(--card-highlight) / 0.5);
+  /* Dense table row hover */
+  .table-row-hover {
+    @apply transition-colors duration-100;
+  }
+  
+  .table-row-hover:hover {
+    @apply bg-muted/50;
   }
 
-  .card-frame::before {
-    content: '';
-    @apply absolute inset-0 rounded-2xl;
-    border: 3px solid hsl(var(--card-border));
-    pointer-events: none;
+  /* Status badges - compact */
+  .badge-status {
+    @apply px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wide;
   }
 
-  /* Card lift hover effect */
-  .card-lift {
-    @apply transition-all duration-300 ease-out;
-    transform: translateY(0) rotateX(0) rotateY(0);
-    transform-style: preserve-3d;
+  .badge-live {
+    @apply bg-primary/20 text-primary;
   }
 
-  .card-lift:hover {
-    transform: translateY(-8px) rotateX(5deg);
-    box-shadow: 
-      0 20px 30px -10px hsl(var(--card-shadow) / 0.3),
-      0 30px 50px -15px hsl(var(--card-shadow) / 0.2);
+  .badge-verified {
+    @apply bg-[hsl(var(--status-verified))]/20 text-[hsl(var(--status-verified))];
   }
 
-  /* Rarity badge styles */
+  .badge-pending {
+    @apply bg-[hsl(var(--status-pending))]/20 text-[hsl(var(--status-pending))];
+  }
+
+  .badge-rejected {
+    @apply bg-destructive/20 text-destructive;
+  }
+
+  /* Rarity badges - compact */
+  .badge-rarity {
+    @apply px-2 py-0.5 rounded text-xs font-semibold;
+  }
+
   .badge-common {
-    @apply bg-[hsl(var(--rarity-common))] text-white;
+    @apply bg-[hsl(var(--rarity-common))]/20 text-[hsl(var(--rarity-common))];
   }
 
   .badge-uncommon {
-    @apply bg-[hsl(var(--rarity-uncommon))] text-white;
+    @apply bg-[hsl(var(--rarity-uncommon))]/20 text-[hsl(var(--rarity-uncommon))];
   }
 
   .badge-rare {
-    @apply bg-[hsl(var(--rarity-rare))] text-white;
+    @apply bg-[hsl(var(--rarity-rare))]/20 text-[hsl(var(--rarity-rare))];
   }
 
   .badge-ultra {
-    @apply bg-[hsl(var(--rarity-ultra))] text-white;
+    @apply bg-[hsl(var(--rarity-ultra))]/20 text-[hsl(var(--rarity-ultra))];
   }
 
   .badge-legendary {
-    background: linear-gradient(135deg, hsl(var(--rarity-legendary)), hsl(35 90% 45%));
-    @apply text-white;
-    box-shadow: 0 0 10px hsl(var(--rarity-legendary) / 0.5);
+    @apply bg-[hsl(var(--rarity-legendary))]/20 text-[hsl(var(--rarity-legendary))];
   }
 
-  /* Status badges */
-  .status-pending {
-    @apply bg-[hsl(var(--status-pending))] text-white;
+  /* Sidebar nav item */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors;
+    @apply text-muted-foreground hover:text-foreground hover:bg-muted/50;
   }
 
-  .status-verified {
-    @apply bg-[hsl(var(--status-verified))] text-white;
+  .nav-item.active {
+    @apply text-foreground bg-muted;
   }
 
-  /* Sticker button style */
-  .btn-sticker {
-    @apply relative px-6 py-3 rounded-full font-bold text-sm uppercase tracking-wide;
+  /* Step indicator */
+  .step-indicator {
+    @apply w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold;
+    @apply bg-muted text-muted-foreground;
+  }
+
+  .step-indicator.active {
     @apply bg-primary text-primary-foreground;
-    @apply transition-all duration-200 ease-out;
-    box-shadow: 
-      0 4px 0 hsl(0 70% 40%),
-      0 6px 10px hsl(var(--card-shadow) / 0.3);
   }
 
-  .btn-sticker:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 6px 0 hsl(0 70% 40%),
-      0 10px 15px hsl(var(--card-shadow) / 0.3);
+  .step-indicator.completed {
+    @apply bg-primary/20 text-primary;
   }
 
-  .btn-sticker:active {
-    transform: translateY(2px);
-    box-shadow: 
-      0 2px 0 hsl(0 70% 40%),
-      0 4px 8px hsl(var(--card-shadow) / 0.3);
+  /* Card thumbnail */
+  .card-thumb {
+    @apply w-10 h-14 rounded bg-muted flex items-center justify-center overflow-hidden;
   }
 
-  .btn-sticker-secondary {
-    @apply bg-secondary;
-    box-shadow: 
-      0 4px 0 hsl(210 60% 45%),
-      0 6px 10px hsl(var(--card-shadow) / 0.3);
+  .card-thumb img {
+    @apply w-full h-full object-cover;
   }
 
-  .btn-sticker-secondary:hover {
-    box-shadow: 
-      0 6px 0 hsl(210 60% 45%),
-      0 10px 15px hsl(var(--card-shadow) / 0.3);
+  /* Upload zone */
+  .upload-zone {
+    @apply border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer transition-colors;
+    @apply hover:border-primary/50 hover:bg-muted/30;
   }
 
-  .btn-sticker-secondary:active {
-    box-shadow: 
-      0 2px 0 hsl(210 60% 45%),
-      0 4px 8px hsl(var(--card-shadow) / 0.3);
+  .upload-zone.active {
+    @apply border-primary bg-primary/10;
   }
 
-  /* Sparkle effect */
-  .sparkle {
-    @apply absolute pointer-events-none;
-    animation: sparkle 2s ease-in-out infinite;
+  /* Verification progress */
+  .verify-step {
+    @apply flex items-center gap-3 py-2;
   }
 
-  @keyframes sparkle {
-    0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
-    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+  .verify-step .icon {
+    @apply w-5 h-5;
   }
 
-  /* Foil shimmer effect */
-  .foil-shimmer {
-    @apply relative overflow-hidden;
+  .verify-step.pending .icon {
+    @apply text-muted-foreground animate-pulse;
   }
 
-  .foil-shimmer::after {
-    content: '';
-    @apply absolute inset-0 pointer-events-none;
-    background: linear-gradient(
-      105deg,
-      transparent 40%,
-      hsl(var(--sparkle) / 0.3) 45%,
-      hsl(var(--sparkle) / 0.5) 50%,
-      hsl(var(--sparkle) / 0.3) 55%,
-      transparent 60%
-    );
-    transform: translateX(-100%);
-    animation: shimmer 3s ease-in-out infinite;
+  .verify-step.success .icon {
+    @apply text-primary;
   }
 
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+  .verify-step.error .icon {
+    @apply text-destructive;
   }
 
-  /* Binder grid */
-  .binder-grid {
-    @apply grid gap-6;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* Stats number */
+  .stat-number {
+    @apply text-3xl font-bold text-foreground;
   }
 
-  @media (min-width: 768px) {
-    .binder-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  /* Featured card glow */
-  .featured-glow {
-    box-shadow: 
-      0 0 60px 20px hsl(var(--accent) / 0.3),
-      0 20px 40px -10px hsl(var(--card-shadow) / 0.4);
+  .stat-label {
+    @apply text-sm text-muted-foreground;
   }
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - dark theme */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
-  border-radius: 5px;
+  background: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--card-border));
-  border-radius: 5px;
+  background: hsl(var(--muted));
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
