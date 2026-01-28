@@ -182,23 +182,9 @@ export function AIVerificationLoader({ progress, cardName }: AIVerificationLoade
           ))}
         </div>
 
-        {/* Animated dots */}
-        <div className="flex items-center justify-center gap-1.5 mt-6">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="w-2 h-2 bg-primary rounded-full"
-              style={{
-                animation: 'bounce 1s infinite',
-                animationDelay: `${i * 0.15}s`,
-              }}
-            />
-          ))}
-        </div>
-
         {/* Tech decoration text */}
         <div className="mt-6 font-mono text-[10px] text-muted-foreground/50 uppercase tracking-widest">
-          ai.verify.v2.4.1 • neural-net-active • blockchain-ready
+          AI VERIFY v2.4 | NEURAL NET ACTIVE
         </div>
       </div>
     </div>
