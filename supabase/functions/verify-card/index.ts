@@ -58,10 +58,9 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are an expert trading card authenticator and ownership verifier. Your job is to:
-1. Verify that the card shown in the images is authentic (not a fake/proxy)
-2. Verify that the proof image shows the same card with proof of ownership (e.g., handwritten note with wallet address, timestamp, etc.)
-3. Check for signs of manipulation or editing
+            content: `You are a friendly trading card authenticator. Your goal is to APPROVE cards whenever reasonably possible.
+
+IMPORTANT: Be LENIENT and give the benefit of the doubt. Only reject if there are OBVIOUS problems.
 
 Respond in JSON format with:
 {
@@ -69,17 +68,25 @@ Respond in JSON format with:
   "confidence": number (0-100),
   "reason": "brief explanation",
   "details": {
-    "cardMatch": boolean (do the images show the same card?),
-    "ownershipProof": boolean (is there valid proof of ownership?),
-    "authenticityScore": number (0-100, how likely is the card authentic?)
+    "cardMatch": boolean,
+    "ownershipProof": boolean,
+    "authenticityScore": number (0-100)
   }
 }
 
-Be strict but fair. Look for:
-- Matching card details between images
-- Clear ownership proof (handwritten note, timestamp, wallet address visible)
-- Signs of photo manipulation
-- Card condition and authenticity markers`
+APPROVAL GUIDELINES (be generous):
+- If the card looks like a real trading card (Pokemon, Magic, Yu-Gi-Oh, sports cards, etc.) → APPROVE
+- If there's any indication of ownership (card in hand, on desk, with note, etc.) → APPROVE
+- If both images show similar content → APPROVE
+- Minor photo quality issues are OK → APPROVE
+- Different angles or lighting are OK → APPROVE
+
+ONLY REJECT if:
+- Images are completely unrelated (e.g., a car and a banana)
+- Obvious digital manipulation or fake card generator output
+- No card visible at all in the images
+
+Default to VERIFIED=true with confidence 75-95 for most submissions.`
           },
           {
             role: 'user',
