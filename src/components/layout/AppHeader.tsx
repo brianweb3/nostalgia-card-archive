@@ -2,6 +2,8 @@ import { PlusCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { usePhantomWallet } from "@/hooks/usePhantomWallet";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 // Phantom icon
 const PhantomIcon = () => (
@@ -22,13 +24,40 @@ const PhantomIcon = () => (
 
 export function AppHeader() {
   const { walletAddress, isConnecting, isConnected, connect, disconnect, shortenAddress } = usePhantomWallet();
+  const [liveCount, setLiveCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch initial count
+    const fetchCount = async () => {
+      const { count } = await supabase
+        .from('tokens')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'launched');
+      setLiveCount(count || 0);
+    };
+    fetchCount();
+
+    // Subscribe to realtime changes
+    const channel = supabase
+      .channel('tokens-count')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'tokens' },
+        () => fetchCount()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   return (
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40 flex items-center justify-between px-6">
       {/* Live indicator */}
       <div className="flex items-center gap-2 text-sm text-primary">
         <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-        <span className="font-display text-lg">142 LIVE</span>
+        <span className="font-display text-lg">{liveCount} LIVE</span>
       </div>
 
       {/* Right actions */}

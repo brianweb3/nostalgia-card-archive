@@ -11,11 +11,13 @@ import {
   Rocket,
   AlertCircle,
   Image as ImageIcon,
-  FileCheck,
   Sparkles,
   ExternalLink,
   Eye,
-  Cpu
+  Cpu,
+  Video,
+  RefreshCw,
+  Hash
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +30,7 @@ import { cn } from "@/lib/utils";
 type Step = 1 | 2 | 3;
 type VerificationStatus = 'idle' | 'verifying' | 'verified' | 'failed';
 type DeployStatus = 'idle' | 'deploying' | 'success' | 'failed';
+type MediaType = 'photo' | 'video';
 
 interface VerificationResult {
   verified: boolean;
@@ -39,6 +42,16 @@ interface VerificationResult {
     authenticityScore: number;
   };
 }
+
+// Generate unique verification ID
+const generateVerificationId = (): string => {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let id = '';
+  for (let i = 0; i < 8; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+};
 
 export default function CreateToken() {
   const { connection } = useConnection();
@@ -56,11 +69,21 @@ export default function CreateToken() {
   const [twitter, setTwitter] = useState("");
   const [website, setWebsite] = useState("");
   
-  // Image state
-  const [cardImage, setCardImage] = useState<string | null>(null);
+  // Image state - 3 separate images
+  const [cardFrontImage, setCardFrontImage] = useState<string | null>(null);
+  const [cardBackImage, setCardBackImage] = useState<string | null>(null);
   const [proofImage, setProofImage] = useState<string | null>(null);
-  const cardInputRef = useRef<HTMLInputElement>(null);
+  const [proofVideo, setProofVideo] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<MediaType>('photo');
+  
+  // Unique verification ID
+  const [verificationId, setVerificationId] = useState<string>(() => generateVerificationId());
+  
+  // Refs
+  const cardFrontInputRef = useRef<HTMLInputElement>(null);
+  const cardBackInputRef = useRef<HTMLInputElement>(null);
   const proofInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
   
   // Status state
   const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>('idle');
@@ -71,6 +94,15 @@ export default function CreateToken() {
   
   // Balance state
   const [balance, setBalance] = useState<number | null>(null);
+
+  // Regenerate verification ID
+  const regenerateId = () => {
+    setVerificationId(generateVerificationId());
+    toast({
+      title: "New ID generated",
+      description: "Write this new ID on paper for verification",
+    });
+  };
 
   // Load balance when wallet connects
   const loadBalance = useCallback(async () => {
@@ -87,14 +119,14 @@ export default function CreateToken() {
   }, [wallet.connected, loadBalance]);
 
   // Handle image upload
-  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>, type: 'card' | 'proof') => {
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>, type: 'front' | 'back' | 'proof') => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 1024) {
       toast({
         title: "File too large",
-        description: "Maximum file size is 5MB",
+        description: "Maximum file size is 10MB",
         variant: "destructive",
       });
       return;
@@ -103,21 +135,47 @@ export default function CreateToken() {
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64 = reader.result as string;
-      if (type === 'card') {
-        setCardImage(base64);
+      if (type === 'front') {
+        setCardFrontImage(base64);
+      } else if (type === 'back') {
+        setCardBackImage(base64);
       } else {
         setProofImage(base64);
+        setProofVideo(null);
       }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Handle video upload
+  const handleVideoUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 50 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Maximum video size is 50MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result as string;
+      setProofVideo(base64);
+      setProofImage(null);
     };
     reader.readAsDataURL(file);
   };
 
   // AI Verification with progress
   const verifyCard = async () => {
-    if (!cardImage || !proofImage) {
+    if (!cardFrontImage || !cardBackImage || (!proofImage && !proofVideo)) {
       toast({
-        title: "Upload images",
-        description: "Card photo and ownership proof are required",
+        title: "Upload all images",
+        description: "Card front, back, and ownership proof are required",
         variant: "destructive",
       });
       return;
@@ -160,10 +218,12 @@ export default function CreateToken() {
     try {
       const { data, error } = await supabase.functions.invoke('verify-card', {
         body: {
-          cardImageUrl: cardImage,
-          proofImageUrl: proofImage,
+          cardFrontUrl: cardFrontImage,
+          cardBackUrl: cardBackImage,
+          proofImageUrl: proofImage || proofVideo,
           cardName: cardName || 'Unknown Card',
           walletAddress: wallet.publicKey.toString(),
+          verificationId: verificationId,
         },
       });
 
@@ -256,7 +316,7 @@ export default function CreateToken() {
         name: cardName,
         symbol: ticker.toUpperCase(),
         description: description || `${cardName} - Verified Trading Card Token`,
-        imageUrl: cardImage || '',
+        imageUrl: cardFrontImage || '',
         twitter: twitter || undefined,
         website: website || undefined,
       };
@@ -283,7 +343,7 @@ export default function CreateToken() {
             name: cardName,
             ticker: ticker.toUpperCase(),
             description: description || `${cardName} - Verified Trading Card Token`,
-            image_url: cardImage,
+            image_url: cardFrontImage,
             wallet_address: wallet.publicKey.toString(),
             status: 'launched',
             rarity: 'common',
@@ -317,7 +377,8 @@ export default function CreateToken() {
     }
   };
 
-  const isFormValid = cardName && ticker && cardImage && proofImage;
+  const hasProofMedia = proofImage || proofVideo;
+  const isFormValid = cardName && ticker && cardFrontImage && cardBackImage && hasProofMedia;
   const canStartVerification = isFormValid && wallet.connected;
   const canDeploy = verificationStatus === 'verified' && isFormValid && wallet.connected;
 
@@ -328,6 +389,7 @@ export default function CreateToken() {
     setDeployStatus('idle');
     setDeployResult(null);
     setVerificationProgress(0);
+    setVerificationId(generateVerificationId());
   };
 
   return (
@@ -367,181 +429,270 @@ export default function CreateToken() {
 
       {/* Step 1: Upload & Details */}
       {currentStep === 1 && (
-        <div className="grid lg:grid-cols-2 gap-8 animate-fade-in">
-          {/* Left - Images */}
-          <div className="space-y-6">
-            {/* Card Image */}
-            <div className="pokemon-card p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <ImageIcon className="w-5 h-5 text-primary" />
-                <span className="font-semibold">Card Photo</span>
+        <div className="animate-fade-in">
+          {/* Verification ID Banner */}
+          <div className="pokemon-card p-4 mb-6 border-primary/50 bg-primary/5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Hash className="w-6 h-6 text-primary" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Your Verification ID</p>
+                  <p className="font-display text-2xl text-primary tracking-widest">{verificationId}</p>
+                </div>
               </div>
-              <div 
-                onClick={() => cardInputRef.current?.click()}
-                className={cn(
-                  "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
-                  cardImage ? "border-primary" : "border-border hover:border-primary/50"
-                )}
-              >
-                {cardImage ? (
-                  <img src={cardImage} alt="Card" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
-                    <Upload className="w-10 h-10 mb-2" />
-                    <span className="text-sm">Upload card photo</span>
-                  </div>
-                )}
-              </div>
-              <input
-                ref={cardInputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e, 'card')}
-                className="hidden"
-              />
+              <Button variant="outline" size="sm" onClick={regenerateId} className="gap-2">
+                <RefreshCw className="w-4 h-4" />
+                Generate New
+              </Button>
             </div>
-
-            {/* Proof Image */}
-            <div className="pokemon-card p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Camera className="w-5 h-5 text-primary" />
-                <span className="font-semibold">Ownership Proof</span>
-              </div>
-              <p className="text-xs text-muted-foreground mb-3">
-                Photo of card with handwritten note: wallet address + today's date
-              </p>
-              <div 
-                onClick={() => proofInputRef.current?.click()}
-                className={cn(
-                  "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
-                  proofImage ? "border-primary" : "border-border hover:border-primary/50"
-                )}
-              >
-                {proofImage ? (
-                  <img src={proofImage} alt="Proof" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
-                    <FileCheck className="w-10 h-10 mb-2" />
-                    <span className="text-sm">Upload ownership proof</span>
-                  </div>
-                )}
-              </div>
-              <input
-                ref={proofInputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e, 'proof')}
-                className="hidden"
-              />
-            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Write this ID on a piece of paper and include it in your ownership proof photo/video
+            </p>
           </div>
 
-          {/* Right - Token Details */}
-          <div className="space-y-6">
-            {/* Wallet Connection */}
-            <div className="pokemon-card p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold">Wallet</h3>
-                  {wallet.connected && balance !== null && (
-                    <p className="text-sm text-muted-foreground">
-                      Balance: {formatSolBalance(balance)} SOL
-                    </p>
-                  )}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Left - Images */}
+            <div className="space-y-4">
+              {/* 3 Photo Upload Blocks */}
+              <div className="grid grid-cols-3 gap-4">
+                {/* Card Front */}
+                <div className="pokemon-card p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <ImageIcon className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-xs">Front</span>
+                  </div>
+                  <div 
+                    onClick={() => cardFrontInputRef.current?.click()}
+                    className={cn(
+                      "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
+                      cardFrontImage ? "border-primary" : "border-border hover:border-primary/50"
+                    )}
+                  >
+                    {cardFrontImage ? (
+                      <img src={cardFrontImage} alt="Card Front" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground p-2">
+                        <Upload className="w-6 h-6 mb-1" />
+                        <span className="text-[10px] text-center">Card front</span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    ref={cardFrontInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'front')}
+                    className="hidden"
+                  />
                 </div>
-                <WalletMultiButton className="!bg-primary hover:!bg-primary/90 !rounded-lg !h-10" />
-              </div>
-            </div>
 
-            {/* Token Form */}
-            <div className="pokemon-card p-4 space-y-4">
-              <h3 className="font-display text-xl">TOKEN DETAILS</h3>
-              
-              <div>
-                <label className="text-sm text-muted-foreground mb-1 block">Card Name *</label>
-                <Input
-                  value={cardName}
-                  onChange={(e) => setCardName(e.target.value)}
-                  placeholder="Charizard Holo 1st Edition"
-                  className="bg-muted/50"
-                />
+                {/* Card Back */}
+                <div className="pokemon-card p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <ImageIcon className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-xs">Back</span>
+                  </div>
+                  <div 
+                    onClick={() => cardBackInputRef.current?.click()}
+                    className={cn(
+                      "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
+                      cardBackImage ? "border-primary" : "border-border hover:border-primary/50"
+                    )}
+                  >
+                    {cardBackImage ? (
+                      <img src={cardBackImage} alt="Card Back" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground p-2">
+                        <Upload className="w-6 h-6 mb-1" />
+                        <span className="text-[10px] text-center">Card back</span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    ref={cardBackInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'back')}
+                    className="hidden"
+                  />
+                </div>
+
+                {/* Ownership Proof */}
+                <div className="pokemon-card p-3">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Camera className="w-4 h-4 text-primary" />
+                    <span className="font-semibold text-xs">+ ID</span>
+                  </div>
+                  <div 
+                    onClick={() => mediaType === 'photo' ? proofInputRef.current?.click() : videoInputRef.current?.click()}
+                    className={cn(
+                      "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
+                      hasProofMedia ? "border-primary" : "border-border hover:border-primary/50"
+                    )}
+                  >
+                    {proofImage ? (
+                      <img src={proofImage} alt="Proof" className="w-full h-full object-cover" />
+                    ) : proofVideo ? (
+                      <video src={proofVideo} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground p-2">
+                        <Upload className="w-6 h-6 mb-1" />
+                        <span className="text-[10px] text-center">Card + ID</span>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    ref={proofInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'proof')}
+                    className="hidden"
+                  />
+                  <input
+                    ref={videoInputRef}
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoUpload}
+                    className="hidden"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="text-sm text-muted-foreground mb-1 block">Ticker *</label>
-                <Input
-                  value={ticker}
-                  onChange={(e) => setTicker(e.target.value.toUpperCase().slice(0, 10))}
-                  placeholder="CHAR"
-                  className="bg-muted/50"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-muted-foreground mb-1 block">Description</label>
-                <Textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="PSA 10, 1999 Base Set, Mint condition..."
-                  className="bg-muted/50 min-h-[80px]"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-muted-foreground mb-1 block">Dev Buy (SOL)</label>
-                <Input
-                  type="number"
-                  value={devBuyAmount}
-                  onChange={(e) => setDevBuyAmount(e.target.value)}
-                  placeholder="0.1"
-                  min="0"
-                  step="0.01"
-                  className="bg-muted/50"
-                />
-                <p className="text-xs text-muted-foreground mt-1">
-                  Amount of SOL to buy on creation
+              {/* Media Type Toggle */}
+              <div className="pokemon-card p-4">
+                <p className="text-sm text-muted-foreground mb-3">
+                  Ownership proof: photo or video of your card with ID <strong className="text-primary">{verificationId}</strong> written on paper
                 </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm text-muted-foreground mb-1 block">Twitter</label>
-                  <Input
-                    value={twitter}
-                    onChange={(e) => setTwitter(e.target.value)}
-                    placeholder="@username"
-                    className="bg-muted/50"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm text-muted-foreground mb-1 block">Website</label>
-                  <Input
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                    placeholder="https://"
-                    className="bg-muted/50"
-                  />
+                <div className="flex gap-2">
+                  <Button
+                    variant={mediaType === 'photo' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setMediaType('photo')}
+                    className="gap-2 flex-1"
+                  >
+                    <Camera className="w-4 h-4" />
+                    Photo
+                  </Button>
+                  <Button
+                    variant={mediaType === 'video' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setMediaType('video')}
+                    className="gap-2 flex-1"
+                  >
+                    <Video className="w-4 h-4" />
+                    Video
+                  </Button>
                 </div>
               </div>
             </div>
 
-            {/* Start Verification Button */}
-            <Button
-              onClick={verifyCard}
-              disabled={!canStartVerification}
-              className="w-full gap-2 h-14 text-lg"
-              size="lg"
-            >
-              <Shield className="w-6 h-6" />
-              Start AI Verification
-            </Button>
-
-            {!wallet.connected && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <AlertCircle className="w-4 h-4" />
-                <span>Connect wallet to continue</span>
+            {/* Right - Token Details */}
+            <div className="space-y-6">
+              {/* Wallet Connection */}
+              <div className="pokemon-card p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold">Wallet</h3>
+                    {wallet.connected && balance !== null && (
+                      <p className="text-sm text-muted-foreground">
+                        Balance: {formatSolBalance(balance)} SOL
+                      </p>
+                    )}
+                  </div>
+                  <WalletMultiButton className="!bg-primary hover:!bg-primary/90 !rounded-lg !h-10" />
+                </div>
               </div>
-            )}
+
+              {/* Token Form */}
+              <div className="pokemon-card p-4 space-y-4">
+                <h3 className="font-display text-xl">TOKEN DETAILS</h3>
+                
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1 block">Card Name *</label>
+                  <Input
+                    value={cardName}
+                    onChange={(e) => setCardName(e.target.value)}
+                    placeholder="Charizard Holo 1st Edition"
+                    className="bg-muted/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1 block">Ticker *</label>
+                  <Input
+                    value={ticker}
+                    onChange={(e) => setTicker(e.target.value.toUpperCase().slice(0, 10))}
+                    placeholder="CHAR"
+                    className="bg-muted/50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1 block">Description</label>
+                  <Textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="PSA 10, 1999 Base Set, Mint condition..."
+                    className="bg-muted/50 min-h-[80px]"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1 block">Dev Buy (SOL)</label>
+                  <Input
+                    type="number"
+                    value={devBuyAmount}
+                    onChange={(e) => setDevBuyAmount(e.target.value)}
+                    placeholder="0.1"
+                    min="0"
+                    step="0.01"
+                    className="bg-muted/50"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Amount of SOL to buy on creation
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-muted-foreground mb-1 block">Twitter</label>
+                    <Input
+                      value={twitter}
+                      onChange={(e) => setTwitter(e.target.value)}
+                      placeholder="@username"
+                      className="bg-muted/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-muted-foreground mb-1 block">Website</label>
+                    <Input
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      placeholder="https://"
+                      className="bg-muted/50"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Start Verification Button */}
+              <Button
+                onClick={verifyCard}
+                disabled={!canStartVerification}
+                className="w-full gap-2 h-14 text-lg"
+                size="lg"
+              >
+                <Shield className="w-6 h-6" />
+                Start AI Verification
+              </Button>
+
+              {!wallet.connected && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>Connect wallet to continue</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

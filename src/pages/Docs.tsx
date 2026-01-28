@@ -6,7 +6,7 @@ export default function Docs() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="font-display text-5xl text-foreground mb-2">MANIFESTO</h1>
-        <p className="text-muted-foreground">Why we built CardPump</p>
+        <p className="text-muted-foreground">Why we built POKE.FUN</p>
       </div>
 
       {/* Divider */}
@@ -53,16 +53,16 @@ export default function Docs() {
         <div className="pokemon-card p-6 border-[hsl(var(--status-verified))]/30">
           <div className="space-y-4 text-lg">
             <p className="text-foreground leading-relaxed">
-              <strong className="text-primary">CardPump requires proof.</strong> Before launching any token, 
+              <strong className="text-primary">POKE.FUN requires proof.</strong> Before launching any token, 
               creators must submit photographic evidence proving they physically own the card.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               Our AI verification system analyzes your card photo alongside ownership proof — 
-              a handwritten note with your wallet address and date. No proof, no token.
+              a photo with your unique verification ID on paper. No proof, no token.
             </p>
             <div className="pt-4 border-t border-border">
               <p className="text-[hsl(var(--status-verified))] font-semibold">
-                Result: Every CardPump token is backed by a real, verified card.
+                Result: Every POKE.FUN token is backed by a real, verified card.
               </p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function Docs() {
               <span className="font-display text-lg text-primary-foreground">1</span>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">Upload Your Card</h3>
+              <h3 className="font-semibold text-foreground text-lg mb-1">Upload Card Front</h3>
               <p className="text-muted-foreground">Take a clear photo of your trading card — front facing, well-lit.</p>
             </div>
           </div>
@@ -89,10 +89,9 @@ export default function Docs() {
               <span className="font-display text-lg text-primary-foreground">2</span>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">Prove Ownership</h3>
+              <h3 className="font-semibold text-foreground text-lg mb-1">Upload Card Back</h3>
               <p className="text-muted-foreground">
-                Submit a photo of the same card with a handwritten note showing your wallet address 
-                and today's date. This proves you have physical possession right now.
+                Capture the back of the same card to verify authenticity and condition.
               </p>
             </div>
           </div>
@@ -102,10 +101,10 @@ export default function Docs() {
               <span className="font-display text-lg text-primary-foreground">3</span>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground text-lg mb-1">AI Verification</h3>
+              <h3 className="font-semibold text-foreground text-lg mb-1">Prove Ownership</h3>
               <p className="text-muted-foreground">
-                Our AI analyzes both images to confirm: same card, genuine ownership proof, 
-                no manipulation. Verification takes ~30 seconds.
+                Submit a photo of your card next to a handwritten note with your unique verification ID. 
+                This proves you have physical possession right now.
               </p>
             </div>
           </div>
@@ -113,6 +112,19 @@ export default function Docs() {
           <div className="pokemon-card p-5 flex items-start gap-4">
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
               <span className="font-display text-lg text-primary-foreground">4</span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground text-lg mb-1">AI Verification</h3>
+              <p className="text-muted-foreground">
+                Our AI analyzes all images to confirm: same card, genuine ownership proof, 
+                no manipulation. Verification takes ~30 seconds.
+              </p>
+            </div>
+          </div>
+
+          <div className="pokemon-card p-5 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+              <span className="font-display text-lg text-primary-foreground">5</span>
             </div>
             <div>
               <h3 className="font-semibold text-foreground text-lg mb-1">Launch Token</h3>
@@ -179,7 +191,7 @@ export default function Docs() {
             OWN THE CARD. PROVE IT. LAUNCH IT.
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            CardPump is the only platform where token authenticity is guaranteed by 
+            POKE.FUN is the only platform where token authenticity is guaranteed by 
             AI-verified physical ownership. If you don't have the card, you can't launch the token.
           </p>
         </div>
