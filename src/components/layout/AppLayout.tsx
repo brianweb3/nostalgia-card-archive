@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppSidebar } from "./AppSidebar";
 import { AppHeader } from "./AppHeader";
+import { AdminPanel } from "@/components/AdminPanel";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -9,6 +10,20 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [adminPanelOpen, setAdminPanelOpen] = useState(false);
+
+  // Listen for Ctrl+Shift+A to open admin panel
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        setAdminPanelOpen(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,6 +42,12 @@ export function AppLayout({ children }: AppLayoutProps) {
           {children}
         </main>
       </div>
+      
+      {/* Admin Panel */}
+      <AdminPanel 
+        open={adminPanelOpen} 
+        onClose={() => setAdminPanelOpen(false)} 
+      />
     </div>
   );
 }
