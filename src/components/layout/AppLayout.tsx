@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AppSidebar } from "./AppSidebar";
+import { AppHeader } from "./AppHeader";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -15,14 +16,17 @@ export function AppLayout({ children }: AppLayoutProps) {
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      <main
+      <div
         className={cn(
-          "min-h-screen transition-all duration-200",
+          "min-h-screen transition-all duration-200 flex flex-col",
           sidebarCollapsed ? "ml-16" : "ml-56"
         )}
       >
-        {children}
-      </main>
+        <AppHeader />
+        <main className="flex-1">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
