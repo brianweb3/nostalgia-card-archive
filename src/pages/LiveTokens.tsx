@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Filter, LayoutGrid, List, Settings, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, MessageSquare, Activity } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight, Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
@@ -11,30 +11,65 @@ import monsterElectric from "@/assets/monster-electric.png";
 import monsterShadow from "@/assets/monster-shadow.png";
 import monsterLegendary from "@/assets/monster-legendary.png";
 
+// Animated number component for inline use
+function AnimatedValue({ value, prefix = "", suffix = "" }: { value: string; prefix?: string; suffix?: string }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <span
+      ref={ref}
+      className={cn(
+        "font-display tabular-nums transition-all duration-500",
+        isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+      )}
+    >
+      {prefix}{value}{suffix}
+    </span>
+  );
+}
+
 // Trending tokens data
 const trendingTokens = [
-  { id: "1", name: "Charizard Holo", ticker: "CHAR", marketCap: "$3.56M", image: monsterFire, description: "1st Edition PSA 10 - The holy grail" },
-  { id: "2", name: "Blastoise Prime", ticker: "BLAST", marketCap: "$8.10M", image: monsterWater, description: "Base Set Unlimited - Pristine condition" },
-  { id: "3", name: "Venusaur 1st", ticker: "VENU", marketCap: "$968.35K", image: monsterPlant, description: "Shadowless 1st Edition - Rare find" },
-  { id: "4", name: "Pikachu VMAX", ticker: "PIKA", marketCap: "$92.37M", image: monsterElectric, description: "Rainbow Rare - Fan favorite" },
-  { id: "5", name: "Gengar Alt", ticker: "GENG", marketCap: "$983.93K", image: monsterShadow, description: "Alternate Art - Ghost power" },
-  { id: "6", name: "Mew Gold Star", ticker: "MEW", marketCap: "$7.78M", image: monsterLegendary, description: "Gold Star Series - Legendary" },
+  { id: "1", name: "Charizard Holo", ticker: "CHAR", marketCap: "3.56M", image: monsterFire, description: "1st Edition PSA 10 - The holy grail" },
+  { id: "2", name: "Blastoise Prime", ticker: "BLAST", marketCap: "8.10M", image: monsterWater, description: "Base Set Unlimited - Pristine condition" },
+  { id: "3", name: "Venusaur 1st", ticker: "VENU", marketCap: "968.35K", image: monsterPlant, description: "Shadowless 1st Edition - Rare find" },
+  { id: "4", name: "Pikachu VMAX", ticker: "PIKA", marketCap: "92.37M", image: monsterElectric, description: "Rainbow Rare - Fan favorite" },
+  { id: "5", name: "Gengar Alt", ticker: "GENG", marketCap: "983.93K", image: monsterShadow, description: "Alternate Art - Ghost power" },
+  { id: "6", name: "Mew Gold Star", ticker: "MEW", marketCap: "7.78M", image: monsterLegendary, description: "Gold Star Series - Legendary" },
 ];
 
 // All tokens data
 const allTokens = [
-  { id: "1", name: "Satoshi", ticker: "SATO", creator: "HUgpmq", time: "2m", marketCap: "$3.5K", progress: 35, change: 12.5, image: monsterFire, rarity: "rare" },
-  { id: "2", name: "Estcru LLC", ticker: "ESTC", creator: "7LL9li", time: "55m", marketCap: "$9.0K", progress: 65, change: -18.00, image: monsterWater, rarity: "uncommon" },
-  { id: "3", name: "Steaks 500", ticker: "SNB", creator: "DQfd5M", time: "12m", marketCap: "$15.8K", progress: 45, change: -11.00, image: monsterPlant, rarity: "common" },
-  { id: "4", name: "Bored Penguin", ticker: "BPYC", creator: "CqFYQU", time: "10m", marketCap: "$6.2K", progress: 25, change: 0.16, image: monsterShadow, rarity: "ultra" },
-  { id: "5", name: "24/7 Trading", ticker: "HOOD", creator: "4jsHZ8", time: "59m", marketCap: "$243.2K", progress: 85, change: -36.24, image: monsterElectric, rarity: "rare" },
-  { id: "6", name: "US Card", ticker: "USTP", creator: "DWPphp", time: "20m", marketCap: "$19.1K", progress: 55, change: -5.76, image: monsterLegendary, rarity: "legendary" },
-  { id: "7", name: "Gold Silver", ticker: "PKMN", creator: "CTDMaY", time: "10h", marketCap: "$2.6M", progress: 90, change: -14.62, image: monsterFire, rarity: "rare" },
-  { id: "8", name: "Digi Silver", ticker: "DIGI", creator: "9a8TA5", time: "4m", marketCap: "$4.6K", progress: 40, change: 13.15, image: monsterWater, rarity: "uncommon" },
-  { id: "9", name: "Lumi", ticker: "LUMI", creator: "EiwjoW", time: "3h", marketCap: "$1.2K", progress: 15, change: null, image: monsterPlant, rarity: "common" },
-  { id: "10", name: "Dog Town", ticker: "IDYL", creator: "ApNyqP", time: "9m", marketCap: "$8.4K", progress: 50, change: 8.2, image: monsterShadow, rarity: "rare" },
-  { id: "11", name: "Ikea Monk", ticker: "MONK", creator: "9cscgf", time: "1y", marketCap: "$156K", progress: 75, change: null, image: monsterElectric, rarity: "ultra" },
-  { id: "12", name: "Orangutan", ticker: "ORANG", creator: "4vNgQp", time: "6m", marketCap: "$2.1K", progress: 20, change: 5.5, image: monsterLegendary, rarity: "legendary" },
+  { id: "1", name: "Satoshi", ticker: "SATO", creator: "HUgpmq", time: "2m", marketCap: "3.5K", progress: 35, change: 12.5, image: monsterFire, rarity: "rare" },
+  { id: "2", name: "Estcru LLC", ticker: "ESTC", creator: "7LL9li", time: "55m", marketCap: "9.0K", progress: 65, change: -18.00, image: monsterWater, rarity: "uncommon" },
+  { id: "3", name: "Steaks 500", ticker: "SNB", creator: "DQfd5M", time: "12m", marketCap: "15.8K", progress: 45, change: -11.00, image: monsterPlant, rarity: "common" },
+  { id: "4", name: "Bored Penguin", ticker: "BPYC", creator: "CqFYQU", time: "10m", marketCap: "6.2K", progress: 25, change: 0.16, image: monsterShadow, rarity: "ultra" },
+  { id: "5", name: "24/7 Trading", ticker: "HOOD", creator: "4jsHZ8", time: "59m", marketCap: "243.2K", progress: 85, change: -36.24, image: monsterElectric, rarity: "rare" },
+  { id: "6", name: "US Card", ticker: "USTP", creator: "DWPphp", time: "20m", marketCap: "19.1K", progress: 55, change: -5.76, image: monsterLegendary, rarity: "legendary" },
+  { id: "7", name: "Gold Silver", ticker: "PKMN", creator: "CTDMaY", time: "10h", marketCap: "2.6M", progress: 90, change: -14.62, image: monsterFire, rarity: "rare" },
+  { id: "8", name: "Digi Silver", ticker: "DIGI", creator: "9a8TA5", time: "4m", marketCap: "4.6K", progress: 40, change: 13.15, image: monsterWater, rarity: "uncommon" },
+  { id: "9", name: "Lumi", ticker: "LUMI", creator: "EiwjoW", time: "3h", marketCap: "1.2K", progress: 15, change: null, image: monsterPlant, rarity: "common" },
+  { id: "10", name: "Dog Town", ticker: "IDYL", creator: "ApNyqP", time: "9m", marketCap: "8.4K", progress: 50, change: 8.2, image: monsterShadow, rarity: "rare" },
+  { id: "11", name: "Ikea Monk", ticker: "MONK", creator: "9cscgf", time: "1y", marketCap: "156K", progress: 75, change: null, image: monsterElectric, rarity: "ultra" },
+  { id: "12", name: "Orangutan", ticker: "ORANG", creator: "4vNgQp", time: "6m", marketCap: "2.1K", progress: 20, change: 5.5, image: monsterLegendary, rarity: "legendary" },
 ];
 
 const filterPills = [
@@ -76,10 +111,11 @@ export default function LiveTokens() {
         </div>
         
         <div className="flex gap-4 overflow-x-auto pb-4 -mx-6 px-6">
-          {trendingTokens.map((token) => (
+          {trendingTokens.map((token, index) => (
             <div
               key={token.id}
               className="flex-shrink-0 w-56 pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02]"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
@@ -89,7 +125,9 @@ export default function LiveTokens() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                 <div className="absolute bottom-3 left-3 right-3">
-                  <div className="text-xl font-display text-white">{token.marketCap}</div>
+                  <div className="font-display text-2xl text-white">
+                    $<AnimatedValue value={token.marketCap} />
+                  </div>
                   <div className="text-sm text-white/90">
                     {token.name} <span className="text-white/50">{token.ticker}</span>
                   </div>
@@ -181,10 +219,11 @@ export default function LiveTokens() {
 
       {/* Token Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {allTokens.map((token) => (
+        {allTokens.map((token, index) => (
           <div
             key={token.id}
-            className="pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02] group"
+            className="pokemon-card cursor-pointer transition-all duration-300 hover:scale-[1.02] group animate-fade-in"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
             <div className="flex gap-3 p-4">
               {/* Image */}
@@ -209,25 +248,29 @@ export default function LiveTokens() {
                 </div>
                 
                 <div className="flex items-center gap-1.5 mt-1.5 text-xs text-muted-foreground">
+                  <User className="w-3 h-3" />
                   <span className="font-mono">{token.creator}</span>
                   <span>·</span>
+                  <Clock className="w-3 h-3" />
                   <span>{token.time}</span>
                 </div>
 
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm font-semibold text-foreground">{token.marketCap}</span>
+                  <span className="font-display text-lg text-foreground">
+                    $<AnimatedValue value={token.marketCap} />
+                  </span>
                   
                   {/* Progress bar */}
                   <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full"
+                      className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-1000"
                       style={{ width: `${token.progress}%` }}
                     />
                   </div>
                   
                   {token.change !== null && (
                     <span className={cn(
-                      "text-xs font-semibold",
+                      "font-display text-sm",
                       token.change >= 0 ? "text-[hsl(var(--status-verified))]" : "text-destructive"
                     )}>
                       {token.change >= 0 ? "+" : ""}{token.change.toFixed(2)}%

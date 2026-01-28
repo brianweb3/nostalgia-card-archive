@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Zap, Shield, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PokeballScene } from "@/components/3d/PokeballScene";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
 export default function Landing() {
   return (
@@ -26,8 +27,11 @@ export default function Landing() {
         {/* Header */}
         <header className="flex items-center justify-between px-8 py-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary-foreground" />
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1/2 bg-primary" />
+              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-white" />
+              <div className="absolute w-full h-0.5 bg-black/80 top-1/2 -translate-y-1/2" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-white border-2 border-black/80 z-10" />
             </div>
             <span className="font-display text-2xl text-foreground">CARDPUMP</span>
           </div>
@@ -116,15 +120,25 @@ export default function Landing() {
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center gap-12">
               <div>
-                <div className="font-display text-3xl text-foreground">12,847</div>
+                <AnimatedCounter 
+                  value={12847} 
+                  className="text-3xl md:text-4xl text-foreground"
+                />
                 <div className="text-sm text-muted-foreground">Cards Verified</div>
               </div>
               <div>
-                <div className="font-display text-3xl text-foreground">$4.2M</div>
+                <div className="font-display text-3xl md:text-4xl text-foreground">
+                  $<AnimatedCounter value={4.2} decimals={1} className="text-3xl md:text-4xl" />M
+                </div>
                 <div className="text-sm text-muted-foreground">Total Volume</div>
               </div>
               <div>
-                <div className="font-display text-3xl text-foreground">98.7%</div>
+                <AnimatedCounter 
+                  value={98.7} 
+                  suffix="%" 
+                  decimals={1}
+                  className="text-3xl md:text-4xl text-foreground"
+                />
                 <div className="text-sm text-muted-foreground">Success Rate</div>
               </div>
             </div>
