@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User, PackageOpen } from "lucide-react";
+import { Filter, LayoutGrid, List, TrendingUp, Zap, Sparkles, DollarSign, Flame, Clock, User, PackageOpen, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { TokenDetailModal } from "@/components/TokenDetailModal";
@@ -74,6 +74,7 @@ export default function LiveTokens() {
       const { data, error } = await supabase
         .from('tokens')
         .select('*')
+        .in('status', ['launched', 'verified'])
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -91,7 +92,7 @@ export default function LiveTokens() {
         rarity: token.rarity || 'common',
         description: token.description || '',
         verifiedAt: new Date(token.created_at).toLocaleString(),
-        pumpfunUrl: `https://pump.fun/coin/${token.ticker?.toLowerCase()}`,
+        pumpfunUrl: (token as any).pumpfun_url || `https://pump.fun/coin/${token.ticker?.toLowerCase()}`,
       }));
 
       setTokens(formattedTokens);
@@ -257,15 +258,18 @@ export default function LiveTokens() {
                   ${token.marketCap}
                 </span>
                 <div className="flex items-center gap-2">
-                  <div className="w-16 h-1.5 bg-muted border border-foreground overflow-hidden">
-                    <div
-                      className="h-full bg-primary transition-all duration-1000"
-                      style={{ width: `${token.progress}%` }}
-                    />
-                  </div>
-                  <span className="font-mono text-[10px] text-muted-foreground">
-                    {token.progress}%
-                  </span>
+                  {token.pumpfunUrl && (
+                    <a
+                      href={token.pumpfunUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center gap-1 px-2 py-1 bg-primary/10 hover:bg-primary/20 text-primary text-[10px] font-mono transition-colors"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      PF
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

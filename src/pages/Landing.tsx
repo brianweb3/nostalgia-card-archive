@@ -15,8 +15,7 @@ export default function Landing() {
                 POKE.FUN
               </h1>
               <p className="text-lg text-muted-foreground max-w-lg font-mono leading-relaxed">
-                Transform your physical trading cards into verified digital tokens. 
-                AI-powered verification ensures authenticity.
+                Tokenize your physical Pokemon card. AI verifies it. One card, one token.
               </p>
             </div>
 
