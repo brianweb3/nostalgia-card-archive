@@ -20,6 +20,8 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+        display: ["Bebas Neue", "sans-serif"],
+        pixel: ["Press Start 2P", "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -54,6 +56,18 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        panel: {
+          DEFAULT: "hsl(var(--panel))",
+          foreground: "hsl(var(--panel-foreground))",
+        },
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          dark: "hsl(var(--gold-dark))",
+        },
+        silver: {
+          DEFAULT: "hsl(var(--silver))",
+          dark: "hsl(var(--silver-dark))",
         },
         rarity: {
           common: "hsl(var(--rarity-common))",
