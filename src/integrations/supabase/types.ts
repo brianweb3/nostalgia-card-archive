@@ -14,7 +14,113 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      tokens: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          market_cap: number | null
+          name: string
+          progress: number | null
+          rarity: Database["public"]["Enums"]["token_rarity"]
+          status: Database["public"]["Enums"]["token_status"]
+          ticker: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          market_cap?: number | null
+          name: string
+          progress?: number | null
+          rarity?: Database["public"]["Enums"]["token_rarity"]
+          status?: Database["public"]["Enums"]["token_status"]
+          ticker: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          market_cap?: number | null
+          name?: string
+          progress?: number | null
+          rarity?: Database["public"]["Enums"]["token_rarity"]
+          status?: Database["public"]["Enums"]["token_status"]
+          ticker?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      verifications: {
+        Row: {
+          ai_confidence: number | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          token_id: string
+          verified_at: string | null
+          wallet_address: string
+        }
+        Insert: {
+          ai_confidence?: number | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          token_id: string
+          verified_at?: string | null
+          wallet_address: string
+        }
+        Update: {
+          ai_confidence?: number | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          token_id?: string
+          verified_at?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verifications_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_connections: {
+        Row: {
+          connected_at: string
+          id: string
+          last_active_at: string
+          wallet_address: string
+          wallet_type: string
+        }
+        Insert: {
+          connected_at?: string
+          id?: string
+          last_active_at?: string
+          wallet_address: string
+          wallet_type?: string
+        }
+        Update: {
+          connected_at?: string
+          id?: string
+          last_active_at?: string
+          wallet_address?: string
+          wallet_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +129,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      token_rarity: "common" | "uncommon" | "rare" | "ultra" | "legendary"
+      token_status: "pending" | "verified" | "launched" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +257,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      token_rarity: ["common", "uncommon", "rare", "ultra", "legendary"],
+      token_status: ["pending", "verified", "launched", "rejected"],
+    },
   },
 } as const
