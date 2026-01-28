@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   Zap, 
@@ -7,13 +6,22 @@ import {
   FileText, 
   ChevronLeft,
   ChevronRight,
-  ExternalLink
+  Home,
+  Video,
+  Terminal,
+  MessageCircle,
+  User,
+  HelpCircle,
+  MoreHorizontal,
+  QrCode
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { path: "/", label: "Live Tokens", icon: Zap },
-  { path: "/create", label: "Create", icon: PlusCircle },
+  { path: "/", label: "Home", icon: Home },
+  { path: "/livestreams", label: "Livestreams", icon: Video },
+  { path: "/terminal", label: "Terminal", icon: Terminal },
   { path: "/stats", label: "Stats", icon: BarChart2 },
   { path: "/docs", label: "Docs", icon: FileText },
 ];
@@ -34,24 +42,26 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
       )}
     >
       {/* Logo */}
-      <div className="h-14 flex items-center justify-between px-4 border-b border-sidebar-border">
-        {!collapsed && (
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-bold text-foreground">CardPump</span>
-          </Link>
-        )}
-        {collapsed && (
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center mx-auto">
-            <Zap className="w-5 h-5 text-primary-foreground" />
+      <div className="h-14 flex items-center gap-2 px-4 border-b border-sidebar-border">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+            <Zap className="w-4 h-4 text-primary-foreground" />
           </div>
-        )}
+          {!collapsed && <span className="font-bold text-foreground">CardPump</span>}
+        </Link>
+        <button
+          onClick={onToggle}
+          className={cn(
+            "ml-auto p-1 rounded hover:bg-muted/50 text-muted-foreground",
+            collapsed && "hidden"
+          )}
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 py-4 px-2 space-y-1">
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -72,34 +82,47 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         })}
       </nav>
 
-      {/* External links */}
-      <div className="py-4 px-2 border-t border-sidebar-border">
-        <a
-          href="https://x.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            "nav-item",
-            collapsed && "justify-center px-2"
-          )}
-          title={collapsed ? "X (Twitter)" : undefined}
-        >
-          <ExternalLink className="w-5 h-5 flex-shrink-0" />
-          {!collapsed && <span>X (Twitter)</span>}
-        </a>
+      {/* Create coin button */}
+      <div className="p-3 border-t border-sidebar-border">
+        <Link to="/create">
+          <Button 
+            className={cn(
+              "w-full bg-primary hover:bg-primary/90",
+              collapsed && "px-2"
+            )}
+          >
+            <PlusCircle className="w-4 h-4" />
+            {!collapsed && <span className="ml-2">Create token</span>}
+          </Button>
+        </Link>
       </div>
 
-      {/* Toggle button */}
-      <button
-        onClick={onToggle}
-        className="h-12 flex items-center justify-center border-t border-sidebar-border hover:bg-muted/50 transition-colors"
-      >
-        {collapsed ? (
+      {/* App promo - only when expanded */}
+      {!collapsed && (
+        <div className="p-3 mx-3 mb-3 bg-muted/30 rounded-lg">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium">CardPump app</span>
+            <button className="text-muted-foreground hover:text-foreground">×</button>
+          </div>
+          <div className="w-20 h-20 bg-foreground rounded-lg mx-auto mb-2 flex items-center justify-center">
+            <QrCode className="w-16 h-16 text-background" />
+          </div>
+          <p className="text-xs text-muted-foreground text-center mb-2">Scan to download</p>
+          <Button variant="outline" size="sm" className="w-full text-xs">
+            Learn more
+          </Button>
+        </div>
+      )}
+
+      {/* Collapsed expand button */}
+      {collapsed && (
+        <button
+          onClick={onToggle}
+          className="h-12 flex items-center justify-center border-t border-sidebar-border hover:bg-muted/50 transition-colors"
+        >
           <ChevronRight className="w-5 h-5 text-muted-foreground" />
-        ) : (
-          <ChevronLeft className="w-5 h-5 text-muted-foreground" />
-        )}
-      </button>
+        </button>
+      )}
     </aside>
   );
 }

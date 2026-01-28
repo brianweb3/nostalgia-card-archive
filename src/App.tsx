@@ -24,6 +24,8 @@ const App = () => (
             <Route path="/create" element={<CreateToken />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/docs" element={<Docs />} />
+            <Route path="/livestreams" element={<LiveTokens />} />
+            <Route path="/terminal" element={<Stats />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AppLayout>
