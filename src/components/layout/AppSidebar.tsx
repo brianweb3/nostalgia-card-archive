@@ -1,31 +1,50 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { 
-  PanelLeftClose, 
-  PanelLeftOpen,
-  Copy,
-  Check
-} from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 // Custom SVG Icons
 const IconHome = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5"
+  >
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
     <polyline points="9 22 9 12 15 12 15 22" />
   </svg>
 );
 
 const IconBolt = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5"
+  >
     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
   </svg>
 );
 
 const IconChart = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5"
+  >
     <path d="M3 3v18h18" />
     <path d="M18 17V9" />
     <path d="M13 17V5" />
@@ -34,7 +53,15 @@ const IconChart = () => (
 );
 
 const IconBook = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5"
+  >
     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
     <path d="M8 7h8" />
@@ -43,7 +70,15 @@ const IconBook = () => (
 );
 
 const IconShield = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-5 h-5"
+  >
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <path d="M9 12l2 2 4-4" />
   </svg>
@@ -98,7 +133,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
     <aside
       className={cn(
         "fixed left-0 top-0 h-full bg-card border-r-2 border-foreground z-50 transition-all duration-200 flex flex-col",
-        collapsed ? "w-14" : "w-52"
+        collapsed ? "w-14" : "w-52",
       )}
     >
       {/* Logo */}
@@ -129,20 +164,16 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
               to={item.path}
               className={cn(
                 "flex items-center gap-3 px-3 py-2 transition-all duration-200 font-mono text-xs uppercase",
-                isActive
-                  ? "bg-primary text-primary-foreground"
-                  : "text-primary hover:bg-primary/10"
+                isActive ? "bg-primary text-primary-foreground" : "text-primary hover:bg-primary/10",
               )}
               title={collapsed ? item.label : undefined}
             >
               <item.icon />
-              {!collapsed && (
-                <span>{item.label}</span>
-              )}
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           );
         })}
-        
+
         {/* X Community Link */}
         <a
           href="https://x.com/i/communities/2016570771590566351/"
@@ -159,10 +190,10 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         <button
           onClick={handleCopyCA}
           className="flex items-center gap-3 px-3 py-2 transition-all duration-200 font-mono text-xs uppercase text-primary hover:bg-primary/10 w-full"
-          title={collapsed ? "CA DrysUB8e36D3QVjuXjfe1wkc4ohypeoq1bPJkoaNpump" : undefined}
+          title={collapsed ? "Copy CA" : undefined}
         >
           {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-          {!collapsed && <span className="truncate">{copied ? "Copied!" : "CA DrysUB8e36D3QVjuXjfe1wkc4ohypeoq1bPJkoaNpump"}</span>}
+          {!collapsed && <span>{copied ? "Copied!" : "Copy CA"}</span>}
         </button>
       </nav>
 
@@ -172,10 +203,7 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
           variant="ghost"
           size="sm"
           onClick={onToggle}
-          className={cn(
-            "w-full justify-center hover:bg-primary/10 text-primary",
-            collapsed ? "px-0" : ""
-          )}
+          className={cn("w-full justify-center hover:bg-primary/10 text-primary", collapsed ? "px-0" : "")}
         >
           {collapsed ? (
             <PanelLeftOpen className="w-4 h-4" />
