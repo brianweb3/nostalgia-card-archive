@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Zap, Shield, Coins } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PokeballScene } from "@/components/3d/PokeballScene";
-import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
 export default function Landing() {
   return (
@@ -67,57 +66,6 @@ export default function Landing() {
                     Learn More
                   </Button>
                 </Link>
-              </div>
-
-              {/* Features */}
-              <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border">
-                <div className="space-y-2">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground">AI Verified</h3>
-                  <p className="text-sm text-muted-foreground">Automatic card authentication</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Coins className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground">Tokenized</h3>
-                  <p className="text-sm text-muted-foreground">Physical cards backed tokens</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Zap className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground">Instant</h3>
-                  <p className="text-sm text-muted-foreground">Launch in minutes</p>
-                </div>
-              </div>
-
-              {/* Stats inline */}
-              <div className="flex items-center gap-10 pt-4">
-                <div>
-                  <AnimatedCounter 
-                    value={12847} 
-                    className="text-2xl md:text-3xl text-foreground"
-                  />
-                  <div className="text-xs text-muted-foreground">Cards Verified</div>
-                </div>
-                <div>
-                  <div className="font-display text-2xl md:text-3xl text-foreground">
-                    $<AnimatedCounter value={4.2} decimals={1} className="text-2xl md:text-3xl" />M
-                  </div>
-                  <div className="text-xs text-muted-foreground">Total Volume</div>
-                </div>
-                <div>
-                  <AnimatedCounter 
-                    value={98.7} 
-                    suffix="%" 
-                    decimals={1}
-                    className="text-2xl md:text-3xl text-foreground"
-                  />
-                  <div className="text-xs text-muted-foreground">Success Rate</div>
-                </div>
               </div>
             </div>
 

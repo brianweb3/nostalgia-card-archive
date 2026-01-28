@@ -16,7 +16,7 @@ function Pokeball() {
 
   return (
     <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.5}>
-      <group ref={groupRef} scale={1.8}>
+      <group ref={groupRef} scale={2.07}>
         {/* Top half - Red */}
         <mesh position={[0, 0.02, 0]}>
           <sphereGeometry args={[1, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
