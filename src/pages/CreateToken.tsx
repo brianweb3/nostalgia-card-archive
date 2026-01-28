@@ -13,14 +13,13 @@ import {
   Image as ImageIcon,
   Sparkles,
   ExternalLink,
-  Eye,
-  Cpu,
   Video,
   RefreshCw,
   Hash,
   Copy,
   LogOut,
-  Wallet
+  Wallet,
+  Star
 } from "lucide-react";
 
 const HELIUS_RPC_URL = 'https://mainnet.helius-rpc.com/?api-key=c5040336-825d-42e6-a592-59ef6633316c';
@@ -31,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { createPumpFunToken, getWalletBalance, checkMinimumBalance, formatSolBalance, type TokenMetadata } from "@/lib/pumpfun";
 import { cn } from "@/lib/utils";
+import { AIVerificationLoader } from "@/components/ui/AIVerificationLoader";
 
 type Step = 1 | 2 | 3;
 type VerificationStatus = 'idle' | 'verifying' | 'verified' | 'failed';
@@ -74,11 +74,12 @@ export default function CreateToken() {
   const [twitter, setTwitter] = useState("");
   const [website, setWebsite] = useState("");
   
-  // Image state - 3 separate images
+  // Image state - 4 separate images (added logo)
   const [cardFrontImage, setCardFrontImage] = useState<string | null>(null);
   const [cardBackImage, setCardBackImage] = useState<string | null>(null);
   const [proofImage, setProofImage] = useState<string | null>(null);
   const [proofVideo, setProofVideo] = useState<string | null>(null);
+  const [tokenLogo, setTokenLogo] = useState<string | null>(null);
   const [mediaType, setMediaType] = useState<MediaType>('photo');
   
   // Unique verification ID
@@ -89,6 +90,7 @@ export default function CreateToken() {
   const cardBackInputRef = useRef<HTMLInputElement>(null);
   const proofInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
   
   // Status state
   const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>('idle');
@@ -129,7 +131,7 @@ export default function CreateToken() {
   }, [wallet.connected, loadBalance]);
 
   // Handle image upload
-  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>, type: 'front' | 'back' | 'proof') => {
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>, type: 'front' | 'back' | 'proof' | 'logo') => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -149,6 +151,8 @@ export default function CreateToken() {
         setCardFrontImage(base64);
       } else if (type === 'back') {
         setCardBackImage(base64);
+      } else if (type === 'logo') {
+        setTokenLogo(base64);
       } else {
         setProofImage(base64);
         setProofVideo(null);
@@ -463,10 +467,46 @@ export default function CreateToken() {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Left - Images */}
             <div className="space-y-4">
-              {/* 3 Photo Upload Blocks */}
+              {/* Token Logo Upload - NEW */}
+              <div className="bg-card p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Star className="w-5 h-5 text-primary" />
+                  <span className="font-display text-lg">TOKEN LOGO</span>
+                </div>
+                <div 
+                  onClick={() => logoInputRef.current?.click()}
+                  className={cn(
+                    "relative w-24 h-24 mx-auto rounded-full cursor-pointer transition-all overflow-hidden",
+                    tokenLogo 
+                      ? "ring-2 ring-primary ring-offset-2 ring-offset-background" 
+                      : "bg-muted/50 hover:bg-muted border-2 border-dashed border-muted-foreground/30 hover:border-primary/50"
+                  )}
+                >
+                  {tokenLogo ? (
+                    <img src={tokenLogo} alt="Token Logo" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground">
+                      <Upload className="w-6 h-6 mb-1" />
+                      <span className="text-[10px]">Logo</span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={logoInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageUpload(e, 'logo')}
+                  className="hidden"
+                />
+                <p className="text-xs text-muted-foreground mt-3 text-center">
+                  Square image recommended (1:1 ratio)
+                </p>
+              </div>
+
+              {/* Card Images */}
               <div className="grid grid-cols-3 gap-4">
                 {/* Card Front */}
-                <div className="pokemon-card p-3">
+                <div className="bg-card p-3">
                   <div className="flex items-center gap-1.5 mb-2">
                     <ImageIcon className="w-4 h-4 text-primary" />
                     <span className="font-semibold text-xs">Front</span>
@@ -474,8 +514,10 @@ export default function CreateToken() {
                   <div 
                     onClick={() => cardFrontInputRef.current?.click()}
                     className={cn(
-                      "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
-                      cardFrontImage ? "border-primary" : "border-border hover:border-primary/50"
+                      "relative aspect-[3/4] rounded-lg cursor-pointer transition-all overflow-hidden",
+                      cardFrontImage 
+                        ? "ring-2 ring-primary" 
+                        : "bg-muted/50 hover:bg-muted border-2 border-dashed border-muted-foreground/30 hover:border-primary/50"
                     )}
                   >
                     {cardFrontImage ? (
@@ -497,7 +539,7 @@ export default function CreateToken() {
                 </div>
 
                 {/* Card Back */}
-                <div className="pokemon-card p-3">
+                <div className="bg-card p-3">
                   <div className="flex items-center gap-1.5 mb-2">
                     <ImageIcon className="w-4 h-4 text-primary" />
                     <span className="font-semibold text-xs">Back</span>
@@ -505,8 +547,10 @@ export default function CreateToken() {
                   <div 
                     onClick={() => cardBackInputRef.current?.click()}
                     className={cn(
-                      "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
-                      cardBackImage ? "border-primary" : "border-border hover:border-primary/50"
+                      "relative aspect-[3/4] rounded-lg cursor-pointer transition-all overflow-hidden",
+                      cardBackImage 
+                        ? "ring-2 ring-primary" 
+                        : "bg-muted/50 hover:bg-muted border-2 border-dashed border-muted-foreground/30 hover:border-primary/50"
                     )}
                   >
                     {cardBackImage ? (
@@ -528,7 +572,7 @@ export default function CreateToken() {
                 </div>
 
                 {/* Ownership Proof */}
-                <div className="pokemon-card p-3">
+                <div className="bg-card p-3">
                   <div className="flex items-center gap-1.5 mb-2">
                     <Camera className="w-4 h-4 text-primary" />
                     <span className="font-semibold text-xs">+ ID</span>
@@ -536,8 +580,10 @@ export default function CreateToken() {
                   <div 
                     onClick={() => mediaType === 'photo' ? proofInputRef.current?.click() : videoInputRef.current?.click()}
                     className={cn(
-                      "relative aspect-[3/4] rounded-lg border-2 border-dashed cursor-pointer transition-all overflow-hidden",
-                      hasProofMedia ? "border-primary" : "border-border hover:border-primary/50"
+                      "relative aspect-[3/4] rounded-lg cursor-pointer transition-all overflow-hidden",
+                      hasProofMedia 
+                        ? "ring-2 ring-primary" 
+                        : "bg-muted/50 hover:bg-muted border-2 border-dashed border-muted-foreground/30 hover:border-primary/50"
                     )}
                   >
                     {proofImage ? (
@@ -569,7 +615,7 @@ export default function CreateToken() {
               </div>
 
               {/* Media Type Toggle */}
-              <div className="pokemon-card p-4">
+              <div className="bg-card p-4">
                 <p className="text-sm text-muted-foreground mb-3">
                   Ownership proof: photo or video of your card with ID <strong className="text-primary">{verificationId}</strong> written on paper
                 </p>
@@ -741,49 +787,7 @@ export default function CreateToken() {
 
       {/* Step 2: AI Verification */}
       {currentStep === 2 && verificationStatus === 'verifying' && (
-        <div className="max-w-xl mx-auto animate-fade-in">
-          <div className="pokemon-card p-8 text-center">
-            {/* Animated Icons */}
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="relative">
-                <Eye className="w-16 h-16 text-primary animate-pulse" />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full animate-ping" />
-              </div>
-              <span className="font-display text-4xl text-muted-foreground">+</span>
-              <div className="relative">
-                <Cpu className="w-16 h-16 text-primary animate-pulse" style={{ animationDelay: '0.5s' }} />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full animate-ping" style={{ animationDelay: '0.3s' }} />
-              </div>
-            </div>
-
-            <h2 className="font-display text-3xl text-foreground mb-2">VERIFYING...</h2>
-            <p className="text-muted-foreground mb-6">
-              AI + Computer Vision is analyzing your card and ownership proof
-            </p>
-
-            {/* Progress Bar */}
-            <div className="w-full h-3 bg-muted rounded-full overflow-hidden mb-4">
-              <div
-                className="h-full bg-gradient-to-r from-primary to-primary/60 rounded-full transition-all duration-500"
-                style={{ width: `${verificationProgress}%` }}
-              />
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {Math.round(verificationProgress)}% complete
-            </p>
-
-            {/* Loading animation */}
-            <div className="flex items-center justify-center gap-1 mt-6">
-              {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="w-3 h-3 bg-primary rounded-full animate-bounce"
-                  style={{ animationDelay: `${i * 0.15}s` }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <AIVerificationLoader progress={verificationProgress} cardName={cardName} />
       )}
 
       {/* Step 3: Result & Deploy */}
