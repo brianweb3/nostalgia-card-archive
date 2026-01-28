@@ -69,7 +69,7 @@ const navItems = [
 ];
 
 // Contract address for COPY CA functionality
-const CONTRACT_ADDRESS = "COMING_SOON";
+const CONTRACT_ADDRESS = "DrysUB8e36D3QVjuXjfe1wkc4ohypeoq1bPJkoaNpump";
 
 export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
   const location = useLocation();
@@ -159,10 +159,10 @@ export function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
         <button
           onClick={handleCopyCA}
           className="flex items-center gap-3 px-3 py-2 transition-all duration-200 font-mono text-xs uppercase text-primary hover:bg-primary/10 w-full"
-          title={collapsed ? "Copy CA" : undefined}
+          title={collapsed ? "CA DrysUB8e36D3QVjuXjfe1wkc4ohypeoq1bPJkoaNpump" : undefined}
         >
           {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-          {!collapsed && <span>{copied ? "Copied!" : "Copy CA"}</span>}
+          {!collapsed && <span className="truncate">{copied ? "Copied!" : "CA DrysUB8e36D3QVjuXjfe1wkc4ohypeoq1bPJkoaNpump"}</span>}
         </button>
       </nav>
 
